@@ -126,7 +126,6 @@ MIDDLEWARE_CLASSES = [
     'desktop.middleware.NotificationMiddleware',
     'desktop.middleware.ExceptionMiddleware',
     'desktop.middleware.ClusterMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware'
     'django.middleware.csrf.CsrfViewMiddleware',
 
@@ -203,6 +202,9 @@ FILE_UPLOAD_HANDLERS = (
   'django.core.files.uploadhandler.MemoryFileUploadHandler',
   'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 )
+
+# Wrap each request in a transaction.
+ATOMIC_REQUESTS = True
 
 
 ############################################################
