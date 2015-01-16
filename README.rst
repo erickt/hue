@@ -83,7 +83,6 @@ your system:
       * mvn (from ``maven`` package or maven3 tarball)
       * openldap-dev / libldap2-dev
       * python-dev
-      * python-simplejson
       * python-setuptools
 
     CentOS:
@@ -102,7 +101,6 @@ your system:
       * mysql-devel
       * openldap-devel
       * python-devel
-      * python-simplejson
       * sqlite-devel
 
     MacOS (mac port):
@@ -110,7 +108,6 @@ your system:
       * libxml2
       * libxslt
       * mysql5-devel
-      * simplejson (easy_install)
       * sqlite3
 
 
