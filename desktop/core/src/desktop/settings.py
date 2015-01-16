@@ -150,13 +150,13 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = [
     'django.contrib.auth',
-    'django_openid_auth',
+    #'django_openid_auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
 
     'django.contrib.admin',
-    'django_extensions',
+    #'django_extensions',
 
     # 'debug_toolbar',
     'south', # database migration tool
