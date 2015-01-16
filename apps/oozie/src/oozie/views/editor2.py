@@ -21,11 +21,10 @@ import uuid
 
 from django.core.urlresolvers import reverse
 from django.forms.formsets import formset_factory
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
-from desktop.lib.django_util import render
+from desktop.lib.django_util import JsonResponse, render
 from desktop.lib.exceptions_renderable import PopupException
 from desktop.lib.i18n import smart_str
 from desktop.lib.rest.http_client import RestException
@@ -114,7 +113,7 @@ def delete_job(request):
   response = {}
   request.info(_('Document deleted.') if len(jobs) > 1 else _('Document deleted.'))
   
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_access_permission()
@@ -151,7 +150,7 @@ def copy_workflow(request):
   response = {}  
   request.info(_('Workflows copied.') if len(jobs) > 1 else _('Workflow copied.'))
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_modify_permission()
@@ -184,7 +183,7 @@ def save_workflow(request):
   response['doc1_id'] = workflow_doc.doc.get().id
   response['message'] = _('Page saved !')
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def new_node(request):
@@ -202,7 +201,7 @@ def new_node(request):
   response['properties'] = properties 
   response['workflows'] = workflows
   
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def _get_workflows(user):
@@ -232,7 +231,7 @@ def add_node(request):
   response['properties'] = _properties
   response['name'] = '%s-%s' % (node['widgetType'].split('-')[0], node['id'][:4])
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def action_parameters(request):
@@ -261,7 +260,7 @@ def action_parameters(request):
   except Exception, e:
     response['message'] = str(e)
     
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_access_permission()
@@ -276,7 +275,7 @@ def workflow_parameters(request):
   except Exception, e:
     response['message'] = str(e)
     
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def gen_xml_workflow(request):
@@ -292,7 +291,7 @@ def gen_xml_workflow(request):
   except Exception, e:
     response['message'] = str(e)
     
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_access_permission()
@@ -321,7 +320,7 @@ def submit_workflow(request, doc_id):
                      'params_form': params_form,
                      'action': reverse('oozie:editor_submit_workflow', kwargs={'doc_id': workflow.id})
                    }, force_template=True).content
-    return HttpResponse(json.dumps(popup), mimetype="application/json")
+    return JsonResponse(popup)
 
 
 def _submit_workflow(user, fs, jt, workflow, mapping):
@@ -417,7 +416,7 @@ def copy_coordinator(request):
   response = {}  
   request.info(_('Coordinator copied.') if len(jobs) > 1 else _('Coordinator copied.'))
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_modify_permission()
@@ -446,7 +445,7 @@ def save_coordinator(request):
   response['id'] = coordinator_doc.id
   response['message'] = _('Saved !')
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def gen_xml_coordinator(request):
@@ -459,7 +458,7 @@ def gen_xml_coordinator(request):
   response['status'] = 0
   response['xml'] = coordinator.to_xml()
     
-  return HttpResponse(json.dumps(response), mimetype="application/json") 
+  return JsonResponse(response) 
 
 
 @check_document_access_permission()
@@ -487,7 +486,7 @@ def submit_coordinator(request, doc_id):
                  'params_form': params_form,
                  'action': reverse('oozie:editor_submit_coordinator',  kwargs={'doc_id': coordinator.id})
                 }, force_template=True).content
-  return HttpResponse(json.dumps(popup), mimetype="application/json")
+  return JsonResponse(popup)
 
 
 def _submit_coordinator(request, coordinator, mapping):
@@ -569,7 +568,7 @@ def save_bundle(request):
   response['id'] = bundle_doc.id
   response['message'] = _('Saved !')
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_access_permission()
@@ -603,7 +602,7 @@ def copy_bundle(request):
   response = {}  
   request.info(_('Bundle copied.') if len(jobs) > 1 else _('Bundle copied.'))
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @check_document_access_permission()
@@ -631,7 +630,7 @@ def submit_bundle(request, doc_id):
                  'params_form': params_form,
                  'action': reverse('oozie:editor_submit_bundle',  kwargs={'doc_id': bundle.id})
                 }, force_template=True).content
-  return HttpResponse(json.dumps(popup), mimetype="application/json")
+  return JsonResponse(popup)
 
 
 def _submit_bundle(request, bundle, properties):

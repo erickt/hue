@@ -126,7 +126,7 @@ def download(request, path):
     if not request.fs.isfile(path):
         raise PopupException(_("'%(path)s' is not a file.") % {'path': path})
 
-    mimetype = mimetypes.guess_type(path)[0] or 'application/octet-stream'
+    content_type = mimetypes.guess_type(path)[0] or 'application/octet-stream'
     stats = request.fs.stats(path)
     mtime = stats['mtime']
     size = stats['size']
@@ -136,7 +136,7 @@ def download(request, path):
     # but tricky to do here.
     fh = request.fs.open(path)
 
-    response = HttpResponse(_file_reader(fh), mimetype=mimetype)
+    response = HttpResponse(_file_reader(fh), content_type=content_type)
     response["Last-Modified"] = http_date(stats['mtime'])
     response["Content-Length"] = stats['size']
     response['Content-Disposition'] = request.GET.get('disposition', 'attachment')

@@ -29,7 +29,8 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 
-from desktop.lib.django_util import render, encode_json_for_js
+from desktop.lib.django_util import JsonResponse, render
+from desktop.lib.json_utils import JSONEncoderForHTML
 from desktop.lib.exceptions_renderable import PopupException
 from desktop.lib.i18n import smart_str, smart_unicode
 from desktop.lib.rest.http_client import RestException
@@ -81,7 +82,7 @@ def manage_oozie_jobs(request, job_id, action):
   except RestException, ex:
     response['data'] = _("Error performing %s on Oozie job %s: %s.") % (action, job_id, ex.message)
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 def bulk_manage_oozie_jobs(request):
   if request.method != 'POST':
@@ -102,7 +103,7 @@ def bulk_manage_oozie_jobs(request):
         response['totalErrors'] = response['totalErrors'] + 1
         response['messages'] += str(ex)
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def show_oozie_error(view_func):
@@ -135,7 +136,7 @@ def list_oozie_workflows(request):
     if request.GET.get('type') == 'progress':
       json_jobs = [oozie_api.get_job(job.id) for job in json_jobs]
 
-    return HttpResponse(encode_json_for_js(massaged_oozie_jobs_for_json(json_jobs, request.user, just_sla)), mimetype="application/json")
+    return JsonResponse(massaged_oozie_jobs_for_json(json_jobs, request.user, just_sla), cls=JSONEncoderForHTML)
 
   return render('dashboard/list_oozie_workflows.mako', request, {
     'user': request.user,
@@ -163,7 +164,7 @@ def list_oozie_coordinators(request):
     if request.GET.get('type') == 'progress':
       json_jobs = [oozie_api.get_coordinator(job.id) for job in json_jobs]
 
-    return HttpResponse(json.dumps(massaged_oozie_jobs_for_json(json_jobs, request.user)).replace('\\\\', '\\'), mimetype="application/json")
+    return HttpResponse(json.dumps(massaged_oozie_jobs_for_json(json_jobs, request.user)).replace('\\\\', '\\'), content_type="application/json")
 
   return render('dashboard/list_oozie_coordinators.mako', request, {
     'jobs': [],
@@ -189,7 +190,7 @@ def list_oozie_bundles(request):
     if request.GET.get('type') == 'progress':
       json_jobs = [oozie_api.get_bundle(job.id) for job in json_jobs]
 
-    return HttpResponse(json.dumps(massaged_oozie_jobs_for_json(json_jobs, request.user)).replace('\\\\', '\\'), mimetype="application/json")
+    return HttpResponse(json.dumps(massaged_oozie_jobs_for_json(json_jobs, request.user)).replace('\\\\', '\\'), content_type="application/json")
 
   return render('dashboard/list_oozie_bundles.mako', request, {
     'jobs': [],
@@ -241,7 +242,7 @@ def list_oozie_workflow(request, job_id):
       'graph': workflow_graph,
       'actions': massaged_workflow_actions_for_json(oozie_workflow.get_working_actions(), oozie_coordinator, oozie_bundle)
     }
-    return HttpResponse(encode_json_for_js(return_obj), mimetype="application/json")
+    return JsonResponse(return_obj, cls=JSONEncoderForHTML)
 
   oozie_slas = []
   if oozie_workflow.has_sla:
@@ -300,7 +301,7 @@ def list_oozie_coordinator(request, job_id):
       'actions': actions,
       'show_all_actions': show_all_actions
     }
-    return HttpResponse(encode_json_for_js(return_obj), mimetype="application/json")
+    return JsonResponse(return_obj, cls=JSONEncoderForHTML)
 
   oozie_slas = []
   if oozie_coordinator.has_sla:
@@ -344,7 +345,7 @@ def list_oozie_bundle(request, job_id):
       'endTime': format_time(oozie_bundle.endTime),
       'actions': massaged_bundle_actions_for_json(oozie_bundle)
     }
-    return HttpResponse(json.dumps(return_obj).replace('\\\\', '\\'), mimetype="application/json")
+    return HttpResponse(json.dumps(return_obj).replace('\\\\', '\\'), content_type="application/json")
 
   return render('dashboard/list_oozie_bundle.mako', request, {
     'oozie_bundle': oozie_bundle,
@@ -390,7 +391,7 @@ def get_oozie_job_log(request, job_id):
     'log': oozie_job.log,
   }
 
-  return HttpResponse(encode_json_for_js(return_obj), mimetype="application/json")
+  return JsonResponse(return_obj, cls=JSONEncoderForHTML)
 
 
 @show_oozie_error
@@ -514,7 +515,7 @@ def rerun_oozie_job(request, job_id, app_path):
                    'action': reverse('oozie:rerun_oozie_job', kwargs={'job_id': job_id, 'app_path': app_path}),
                  }, force_template=True).content
 
-  return HttpResponse(json.dumps(popup), mimetype="application/json")
+  return JsonResponse(popup)
 
 
 def _rerun_workflow(request, oozie_id, run_args, mapping):
@@ -568,7 +569,7 @@ def rerun_oozie_coordinator(request, job_id, app_path):
                    'action': reverse('oozie:rerun_oozie_coord', kwargs={'job_id': job_id, 'app_path': app_path}),
                  }, force_template=True).content
 
-  return HttpResponse(json.dumps(popup), mimetype="application/json")
+  return JsonResponse(popup)
 
 
 def _rerun_coordinator(request, oozie_id, args, params, properties):
@@ -631,7 +632,7 @@ def rerun_oozie_bundle(request, job_id, app_path):
                    'action': reverse('oozie:rerun_oozie_bundle', kwargs={'job_id': job_id, 'app_path': app_path}),
                  }, force_template=True).content
 
-  return HttpResponse(json.dumps(popup), mimetype="application/json")
+  return JsonResponse(popup)
 
 
 def _rerun_bundle(request, oozie_id, args, params, properties):
@@ -680,7 +681,7 @@ def submit_external_job(request, application_path):
                    'params_form': params_form,
                    'action': reverse('oozie:submit_external_job', kwargs={'application_path': application_path})
                  }, force_template=True).content
-  return HttpResponse(json.dumps(popup), mimetype="application/json")
+  return JsonResponse(popup)
 
 
 def massaged_workflow_actions_for_json(workflow_actions, oozie_coordinator, oozie_bundle):

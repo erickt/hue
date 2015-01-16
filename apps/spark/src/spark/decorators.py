@@ -18,8 +18,10 @@
 import json
 import logging
 
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from django.utils.translation import ugettext as _
+
+from desktop.lib.django_util import JsonResponse
 from desktop.lib.exceptions_renderable import PopupException
 
 LOG = logging.getLogger(__name__)
@@ -45,5 +47,5 @@ def json_error_handler(view_fn):
       response = {
         'error': str(e)
       }
-      return HttpResponse(json.dumps(response), mimetype="application/json", status=500)
+      return JsonResponse(response, status=500)
   return decorator

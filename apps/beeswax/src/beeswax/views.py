@@ -34,6 +34,7 @@ from django.core.urlresolvers import reverse
 from desktop.appmanager import get_apps_dict
 from desktop.context_processors import get_app_name
 from desktop.lib.paginator import Paginator
+from desktop.lib.django_util import JsonResponse
 from desktop.lib.django_util import copy_query_dict, format_preserving_redirect, render
 from desktop.lib.django_util import login_notrequired, get_desktop_uri_prefix
 from desktop.lib.exceptions_renderable import PopupException
@@ -324,7 +325,7 @@ def list_query_history(request):
     resp = {
       'queries': [massage_query_history_for_json(app_name, query_history) for query_history in page.object_list]
     }
-    return HttpResponse(json.dumps(resp), mimetype="application/json")
+    return JsonResponse(resp)
 
 
   return render('list_history.mako', request, {
@@ -544,7 +545,7 @@ def view_results(request, id, first_row=0):
     del context['save_form']
   if 'query' in context:
     del context['query']
-  return HttpResponse(json.dumps(context), mimetype="application/json")
+  return JsonResponse(context)
 
 
 def configuration(request):
@@ -576,7 +577,7 @@ def install_examples(request):
   else:
     response['message'] = _('A POST request is required.')
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @login_notrequired

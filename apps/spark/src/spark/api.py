@@ -18,10 +18,11 @@
 import json
 import logging
 
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from django.utils.translation import ugettext as _
 
 from desktop.context_processors import get_app_name
+from desktop.lib.django_util import JsonResponse
 from desktop.lib.exceptions import StructuredException
 
 from beeswax import models as beeswax_models
@@ -44,7 +45,7 @@ def jars(request):
     'jars': api.jars()
   }
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 @json_error_handler
 def contexts(request):
@@ -53,7 +54,7 @@ def contexts(request):
     'contexts': api.contexts()
   }
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def create_context(request):
@@ -76,7 +77,7 @@ def create_context(request):
 
   response['name'] = name
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def delete_context(request):
@@ -97,7 +98,7 @@ def delete_context(request):
 
   response['name'] = name
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def job(request, job_id):
@@ -108,7 +109,7 @@ def job(request, job_id):
   except RestException, e:
     response['results'] = json.loads(e.message)
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 
@@ -164,7 +165,7 @@ def execute(request, design_id=None):
   except RuntimeError, e:
     response['message']= str(e)
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @json_error_handler
@@ -194,7 +195,7 @@ def save_query(request, design_id=None):
   except RuntimeError, e:
     response['message'] = str(e)
 
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 @json_error_handler
@@ -209,7 +210,7 @@ def fetch_saved_query(request, design_id):
   design = safe_get_design(request, query_type, design_id)
 
   response['design'] = design_to_dict(design)
-  return HttpResponse(json.dumps(response), mimetype="application/json")
+  return JsonResponse(response)
 
 
 def design_to_dict(design):

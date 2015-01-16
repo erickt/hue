@@ -18,12 +18,11 @@
 import json
 import logging
 
-from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 from desktop.context_processors import get_app_name
-from desktop.lib.django_util import render
+from desktop.lib.django_util import JsonResponse, render
 from django.shortcuts import redirect
 
 from beeswax import models as beeswax_models
@@ -133,10 +132,7 @@ def download_result(request, job_id):
   api = get_api(request.user)
   result = api.job(job_id)
 
-  mimetype = 'application/json'
-  gen = json.dumps(result['result'])
-
-  resp = HttpResponse(gen, mimetype=mimetype)
+  resp = JsonResponse(result['result'])
   resp['Content-Disposition'] = 'attachment; filename=query_result.%s' % format
 
   return resp
