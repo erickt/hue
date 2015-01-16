@@ -322,6 +322,8 @@ DEFAULT_FROM_EMAIL = desktop.conf.SMTP.DEFAULT_FROM.get()
 SECRET_KEY = desktop.conf.SECRET_KEY.get()
 if SECRET_KEY == "":
   logging.warning("secret_key should be configured")
+  import uuid
+  SECRET_KEY = str(uuid.uuid4())
 
 # SAML
 SAML_AUTHENTICATION = 'libsaml.backend.SAML2Backend' in AUTHENTICATION_BACKENDS
