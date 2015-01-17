@@ -1118,8 +1118,8 @@ $(document).ready(function () {
   }
 
   // load the autocomplete properties
-  $.getJSON("${ url('oozie:autocomplete_properties') }", function (properties) {
-    AUTOCOMPLETE_PROPERTIES = properties;
+  $.getJSON("${ url('oozie:autocomplete_properties') }", function (data) {
+    AUTOCOMPLETE_PROPERTIES = data.properties;
   });
 });
 
