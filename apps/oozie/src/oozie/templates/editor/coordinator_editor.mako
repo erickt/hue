@@ -43,27 +43,27 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
     <a title="${ _('Edit') }" rel="tooltip" data-placement="bottom" data-bind="click: toggleEditing, css: {'btn': true, 'btn-inverse': isEditing}, visible: canEdit">
       <i class="fa fa-pencil"></i>
     </a>
-    
+
     &nbsp;&nbsp;&nbsp;
 
     <button type="button" title="${ _('Settings') }" rel="tooltip" data-placement="bottom" data-toggle="modal" data-target="#settingsModal" data-bind="css: {'btn': true}, visible: canEdit">
       <i class="fa fa-cog"></i>
     </button>
-    
+
     &nbsp;&nbsp;&nbsp;
 
-    <button type="button" title="${ _('Save') }" rel="tooltip" data-placement="bottom" data-loading-text="${ _("Saving...") }" 
+    <button type="button" title="${ _('Save') }" rel="tooltip" data-placement="bottom" data-loading-text="${ _("Saving...") }"
         data-bind="click: $root.save, css: {'btn': true}, visible: coordinator.properties.workflow() && canEdit">
       <i class="fa fa-save"></i>
     </button>
-    
+
     <a class="share-link btn" rel="tooltip" data-placement="bottom" data-bind="click: openShareModal,
         attr: {'data-original-title': '${ _("Share") } ' + name},
         css: {'isShared': isShared(), 'btn': true},
         visible: coordinator.id() != null && canEdit()">
       <i class="fa fa-users"></i>
-    </a>    
-    
+    </a>
+
     &nbsp;&nbsp;&nbsp;
 
     <a class="btn" href="${ url('oozie:new_coordinator') }" title="${ _('New') }" rel="tooltip" data-placement="bottom" data-bind="css: {'btn': true}">
@@ -93,70 +93,116 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
         <div class="card-body">
           <a class="pointer" data-bind="visible: ! coordinator.properties.workflow(), click: showChooseWorkflow">${ _('Choose a workflow...') }</a>
           <!-- ko if: coordinator.properties.workflow -->
-            <!-- ko if: isEditing -->            
+            <!-- ko if: isEditing -->
             <a class="pointer" data-bind="click: showChooseWorkflow, text: getWorkflowById(coordinator.properties.workflow()).name"></a>
-            
+
             <a data-bind="attr: { href: '${ url('oozie:edit_workflow') }?workflow=' + coordinator.properties.workflow() }" target="_blank" title="${ _('Open') }">
              <i class="fa fa-external-link-square"></i>
             </a>
             <!-- /ko -->
             <!-- ko ifnot: isEditing -->
-            <a data-bind="attr: { href: '${ url('oozie:edit_workflow') }?workflow=' + coordinator.properties.workflow() }, text: getWorkflowById(coordinator.properties.workflow()).name" target="_blank" title="${ _('Open') }">              
-            </a>            
-            <!-- /ko -->            
+            <a data-bind="attr: { href: '${ url('oozie:edit_workflow') }?workflow=' + coordinator.properties.workflow() }, text: getWorkflowById(coordinator.properties.workflow()).name" target="_blank" title="${ _('Open') }">
+            </a>
+            <!-- /ko -->
           <!-- /ko -->
         </div>
       </div>
 
-      <div class="card card-home" data-bind="visible: coordinator.properties.workflow">
+      <div class="card card-home" data-bind="visible: coordinator.properties.workflow" style="margin-top: 20px">
         <h1 class="card-heading simple">${ _('How often?') }</h1>
 
         <div class="card-body">
-          
-          <div class="controls">
-            <div class="row-fluid">
-              <div class="span9">
-                <a data-bind="visible: coordinator.properties.cron_advanced" href="http://quartz-scheduler.org/api/2.0.0/org/quartz/CronExpression.html" class="pull-right" target="_blank">
-                  &nbsp;<i class="fa fa-question-circle" title="${ _('Check syntax ?') }"></i>
-                </a>
-                <input data-bind="visible: coordinator.properties.cron_advanced" id="coord-frequency" data-bind="value: coordinator.properties.cron_frequency" name="cron_frequency" class="pull-right"/>
-                <span data-bind="visible: coordinator.properties.cron_advanced" class="pull-right" style="padding-right:20px">
-                  ${ _('Crontab') }
-                </span>
-              </div>
-              <div class="span3">
-              </div>
+
+        <form class="form-horizontal">
+          <div class="control-group" data-bind="visible: ! coordinator.properties.cron_advanced()">
+            <div class="controls" id="jqCron-container">
+              <div id="jqCron-instance" style="margin-top: 5px; display: inline-block"></div>
             </div>
-          </div>          
-                    
-          <div data-bind="visible: coordinator.showAdvancedFrequencyUI" style="padding-left: 20px">
-            Start
-            <input data-bind="value: coordinator.properties.start" />
-            End
-            <input data-bind="value: coordinator.properties.end" />
-            Timezone
-            <input data-bind="value: coordinator.properties.timezone" />
-              
-            <label class="checkbox" style="display: inline-block">
-               <input type="checkbox" name="coordinator.properties.cron_advanced" data-bind="checked: coordinator.properties.cron_advanced" /> ${ _('Advanced Cron syntax') }
-            </label>
           </div>
-          
-          <a href="#" data-bind="click: function() { $root.coordinator.showAdvancedFrequencyUI(! $root.coordinator.showAdvancedFrequencyUI()) }">
-            <i class="fa fa-sliders"></i>
-          </a>          
+          <div class="control-group" data-bind="visible: coordinator.properties.cron_advanced">
+            <label class="control-label">${ _('Crontab') }</label>
+            <div class="controls">
+              <input id="coord-frequency" type="text" data-bind="value: coordinator.properties.cron_frequency" name="cron_frequency"/>
+              <span class="help-inline"><a data-bind="visible: coordinator.properties.cron_advanced" href="http://quartz-scheduler.org/api/2.0.0/org/quartz/CronExpression.html" target="_blank">
+                <i class="fa fa-question-circle" title="${ _('Check syntax ?') }"></i></a>
+              </span>
+            </div>
+          </div>
+          <div class="control-group" style="margin-bottom: 0">
+            <label class="control-label"></label>
+            <div class="controls">
+            <a href="#" data-bind="click: function() { $root.coordinator.showAdvancedFrequencyUI(! $root.coordinator.showAdvancedFrequencyUI()) }">
+              <i class="fa fa-sliders"></i> <span data-bind="visible: ! coordinator.showAdvancedFrequencyUI()">${ _('Options') }</span>
+              <span data-bind="visible: coordinator.showAdvancedFrequencyUI">${ _('Hide') }</span>
+            </a>
+            </div>
+          </div>
+        </form>
+
+
+          <div data-bind="visible: coordinator.showAdvancedFrequencyUI">
+            <form class="form-horizontal">
+
+              <div class="control-group">
+                <div class="controls">
+                  <label class="checkbox" style="display: inline-block; margin-top: 5px">
+                    <input type="checkbox" name="coordinator.properties.cron_advanced" data-bind="checked: coordinator.properties.cron_advanced" /> ${ _('Advanced syntax') }
+                  </label>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">${ _('Starts on') }</label>
+                <div class="controls">
+                  <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="input-small" data-bind="value: coordinator.properties.startDateUI, datepicker: {}" />
+                  </div>
+                  <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="fa fa-clock-o"></i></span><input type="text" class="input-mini" data-bind="value: coordinator.properties.startTimeUI, timepicker: {}" />
+                  </div>
+                  <span class="help-inline"></span>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">${ _('Ends on') }</label>
+                <div class="controls">
+                  <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="input-small" data-bind="value: coordinator.properties.endDateUI, datepicker: {}" />
+                  </div>
+                  <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="fa fa-clock-o"></i></span><input type="text" class="input-mini" data-bind="value: coordinator.properties.endTimeUI, timepicker: {}" />
+                  </div>
+                  <span class="help-inline"></span>
+                </div>
+              </div>
+              <div class="control-group" style="margin-bottom: 0">
+                <label class="control-label">${ _('Timezone') }</label>
+                <div class="controls">
+                  <select data-bind="options: $root.availableTimezones, select2: { placeholder: '${ _("Select a Timezone") }', update: coordinator.properties.timezone}" style="width: 180px"></select>
+                  <span class="help-inline"></span>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+
+
         </div>
       </div>
 
-      <div class="card card-home" data-bind="visible: coordinator.properties.workflow()">
+
+      <div class="card card-home" data-bind="visible: coordinator.properties.workflow()" style="margin-top: 20px; margin-bottom: 20px">
         <h1 class="card-heading simple">${ _('Workflow Parameters') }</h1>
 
         <div class="card-body">
           <ul data-bind="foreach: coordinator.variables" class="unstyled">
-            <li>
-              <select data-bind="options: $parent.coordinator.workflowParameters, optionsText: 'name', value: workflow_variable, optionsValue: 'name', visible: $root.isEditing"></select>
+            <li style="margin-bottom: 10px">
+              <select data-bind="options: $parent.coordinator.workflowParameters, optionsText: 'name', optionsValue: 'name', select2: { placeholder: '${ _("Select a parameter") }', update: workflow_variable, type: 'parameter'}, visible: $root.isEditing" style="width: 250px"></select>
 
               <span data-bind="text: workflow_variable, visible: ! $root.isEditing()"/></span>
+
+              &nbsp;&nbsp;
 
               <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
@@ -189,81 +235,100 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
                   <!-- /ko -->
                 </ul>
               </div>
-              <input data-bind="value: dataset_variable"/>
+              
+              &nbsp;&nbsp;
+              
+              <input type="text" data-bind="value: dataset_variable, filechooser: dataset_variable" style="margin-bottom:0; width: 300px" class="filechooser-input" />
 
-              <!-- ko if: dataset_type() == 'input_path' || dataset_type() == 'output_path' -->              
-              [hourly] [daily] [weekly] [monthly]
+              <!-- ko if: dataset_type() == 'input_path' || dataset_type() == 'output_path' -->
+
+
+            ## <div class="btn-group" data-toggle="buttons-radio">
+            ##   <a class="btn pointer" data-bind="css: {'active': coordinator.properties.frequency_unit() == 'hours'}, click: function(){ coordinator.properties.frequency_unit('hours') }">${ _('Hourly') }</a>
+            ##   <a class="btn pointer" data-bind="css: {'active': coordinator.properties.frequency_unit() == 'days'}, click: function(){ coordinator.properties.frequency_unit('days') }">${ _('Daily') }</a>
+            ##   <a class="btn pointer" data-bind="css: {'active': coordinator.properties.frequency_unit() == 'weeks'}, click: function(){ coordinator.properties.frequency_unit('weeks') }">${ _('Weekly') }</a>
+            ##   <a class="btn pointer" data-bind="css: {'active': coordinator.properties.frequency_unit() == 'months'}, click: function(){ coordinator.properties.frequency_unit('months') }">${ _('Monthly') }</a>
+            ## </div>
 
               <a href="#" data-bind="click: function() { show_advanced(! show_advanced()) }">
                 <i class="fa fa-sliders"></i>
               </a>
 
-              <div data-bind="visible: show_advanced" style="padding-left: 20px">
-                Done flag 
-                <input type="checkbox" data-bind="checked: use_done_flag" />
-                <input data-bind="value: done_flag, visible: use_done_flag"/>
-                
-                Same start
-                <input type="checkbox" data-bind="checked: same_start" />                
-                <input data-bind="value: start, visible: ! same_start()" />
-                
-                Same timezone
-                <input type="checkbox" data-bind="checked: same_timezone" />
-                <input data-bind="value: timezone, visible: ! same_timezone()" />
-                
-                <div class="control-group">
-                  <label class="control-label">${ _('Instance') }</label>
-
-                  <div class="controls">
-                    <div class="btn-group" data-toggle="buttons-radio">
-                      <button id="default-btn" type="button" class="btn"
-                              data-bind="click: function() { instance_choice('default'); }, css: { active: instance_choice() == 'default' }">
-                        ${ _('Default') }
-                      </button>
-                      <button id="single-btn" type="button" class="btn"
-                              data-bind="click: function() { instance_choice('single'); }, css: { active: instance_choice() == 'single' }">
-                        ${ _('Single') }
-                      </button>
-                      <button id="range-btn" type="button" class="btn"
-                              data-bind="click: function() { instance_choice('range'); }, css: { active: instance_choice() == 'range' }">
-                        ${ _('Range') }
-                      </button>
-                    </div>
-                    <span class="help-block">instance_choice.help_text</span>
-
-                    <div data-bind="visible: $.inArray(instance_choice(), ['single', 'range']) != -1">
-                      <span class="span1">${ _('Start') }</span>
-                      <input name="instance_start" type="number"
-                             data-bind="value: start_instance, enable: ! is_advanced_start_instance()"/>
-                      <label style="display: inline">
-                        &nbsp;
-                        <input type="checkbox" data-bind="checked: is_advanced_start_instance">
-                        ${ _('(advanced)') }
-                      </label>
-                      <input type="text" data-bind="value: advanced_start_instance, visible: is_advanced_start_instance()"
-                             class="span4"/>
-                      <span class="help-block">advanced_start_instance.help_text </span>
-                    </div>
-                    <div data-bind="visible: instance_choice() == 'range'">
-                      <span class="span1">${ _('End') }</span>
-                      <input name="instance_end" type="number"
-                             data-bind="value: end_instance, enable: ! is_advanced_end_instance()"/>
-                      <label style="display: inline">
-                        &nbsp;
-                        <input type="checkbox" data-bind="checked: is_advanced_end_instance">
-                        ${ _('(advanced)') }
-                      </label>
-                      <input type="text" data-bind="value: advanced_end_instance, visible: is_advanced_end_instance()"
-                             class="span4"/>
-                      <span class="help-block">advanced_end_instance.help_text</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /ko -->
               <a href="#" data-bind="click: function(){ $root.coordinator.variables.remove(this); }, visible: $root.isEditing">
                 <i class="fa fa-minus"></i>
-              </a>              
+              </a>
+
+              <div data-bind="visible: show_advanced" style="padding: 20px">
+
+                <form class="form-horizontal">
+                  <div class="control-group">
+                    <label class="control-label">${ _('Done flag') }</label>
+                    <div class="controls">
+                      <input type="checkbox" data-bind="checked: use_done_flag, style: {'margin-top': !use_done_flag()?'9px':'-1px'}" />
+                      <input type="text" data-bind="value: done_flag, visible: use_done_flag"/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label">${ _('Same start') }</label>
+                    <div class="controls">
+                      <input type="checkbox" data-bind="checked: same_start, style: {'margin-top': same_start()?'9px':'-1px'}" />
+                      <input type="text" data-bind="value: start, visible: ! same_start()"/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label">${ _('Same timezone') }</label>
+                    <div class="controls">
+                      <input type="checkbox" data-bind="checked: same_timezone, style: {'margin-top': same_timezone()?'5px':'0'}" />
+                      <select data-bind="options: $root.availableTimezones, select2: { placeholder: '${ _("Select a Timezone") }', update: timezone}, visible: ! same_timezone()" style="width: 180px"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label">${ _('Instance') }</label>
+                    <div class="controls">
+                      <div class="btn-group" data-toggle="buttons-radio">
+                        <button id="default-btn" type="button" class="btn"
+                                data-bind="click: function() { instance_choice('default'); }, css: { active: instance_choice() == 'default' }">
+                          ${ _('Default') }
+                        </button>
+                        <button id="single-btn" type="button" class="btn"
+                                data-bind="click: function() { instance_choice('single'); }, css: { active: instance_choice() == 'single' }">
+                          ${ _('Single') }
+                        </button>
+                        <button id="range-btn" type="button" class="btn"
+                                data-bind="click: function() { instance_choice('range'); }, css: { active: instance_choice() == 'range' }">
+                          ${ _('Range') }
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="control-group" data-bind="visible: $.inArray(instance_choice(), ['single', 'range']) != -1">
+                    <label class="control-label">${ _('Start') }</label>
+                    <div class="controls">
+                      <input name="instance_start" type="number" data-bind="value: start_instance, enable: ! is_advanced_start_instance()"/>
+                      <label style="display: inline">
+                          &nbsp;
+                          <input type="checkbox" data-bind="checked: is_advanced_start_instance" style="margin-top:0">
+                          ${ _('(advanced)') }
+                        </label>
+                        <input type="text" data-bind="value: advanced_start_instance, visible: is_advanced_start_instance()"/>
+                    </div>
+                  </div>
+                  <div class="control-group" data-bind="visible: instance_choice() == 'range'">
+                    <label class="control-label">${ _('End') }</label>
+                    <div class="controls">
+                      <input name="instance_end" type="number" data-bind="value: end_instance, enable: ! is_advanced_end_instance()"/>
+                      <label style="display: inline">
+                          &nbsp;
+                          <input type="checkbox" data-bind="checked: is_advanced_end_instance" style="margin-top:0">
+                          ${ _('(advanced)') }
+                        </label>
+                        <input type="text" data-bind="value: advanced_end_instance, visible: is_advanced_end_instance()"/>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+              <!-- /ko -->
             </li>
           </ul>
 
@@ -272,15 +337,15 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
           </a>
 
         </div>
-        
+
       </div>
 
       <div class="card card-home" data-bind="visible: coordinator.id() == null && coordinator.properties.workflow()">
         <div class="card-body">
-          <a href type="button" title="${ _('Save') }" rel="tooltip" data-placement="bottom" data-loading-text="${ _("Saving...") }" 
+          <a href type="button" title="${ _('Save') }" rel="tooltip" data-placement="bottom" data-loading-text="${ _("Saving...") }"
             data-bind="click: $root.save, css: {'btn': true}">
             ${ _('Save') }
-          </a>        
+          </a>
         </div>
       </div>
 
@@ -297,14 +362,14 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
     <div>
       <ul data-bind="foreach: $root.filteredModalWorkflows().sort(function (l, r) { return l.name() > r.name() ? 1 : -1 }), visible: $root.filteredModalWorkflows().length > 0"
           class="unstyled inline fields-chooser" style="height: 100px; overflow-y: auto">
-        <li data-bind="click: selectWorkflow">
-          <span class="badge badge-info">
+        <li>
+          <span class="badge badge-info" data-bind="click: selectWorkflow">
             <span data-bind="text: name(), attr: {'title': uuid()}"></span>
           </span>
           <a data-bind="attr: { href: '${ url('oozie:edit_workflow') }?workflow=' + uuid() }" target="_blank" title="${ _('Open') }">
             <i class="fa fa-external-link-square"></i>
           </a>
-        </li>        
+        </li>
       </ul>
       <div class="alert alert-info inline" data-bind="visible: $root.filteredModalWorkflows().length == 0" style="margin-left: 250px;margin-right: 50px; height: 42px;line-height: 42px">
         ${_('There are no workflows matching your search term.')}
@@ -338,7 +403,7 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
 
       <h4>${ _('Concurrency') }</h4>
       <input data-bind="value: coordinator.properties.concurrency"/>
-      
+
       <h4>${ _('Execution') }</h4>
       <input data-bind="value: coordinator.properties.execution"/>
 
@@ -354,6 +419,18 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
 
 
 <div id="submit-coord-modal" class="modal hide"></div>
+<div id="chooseFile" class="modal hide fade">
+  <div class="modal-header">
+      <a href="#" class="close" data-dismiss="modal">&times;</a>
+      <h3>${_('Choose a file')}</h3>
+  </div>
+  <div class="modal-body">
+      <div id="filechooser">
+      </div>
+  </div>
+  <div class="modal-footer">
+  </div>
+</div>
 
 
 </div>
@@ -369,6 +446,11 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
 <link href="/static/css/jqCron.css" rel="stylesheet" type="text/css" />
 <script src="/static/js/jqCron.js" type="text/javascript"></script>
 
+<script src="/static/ext/js/moment.min.js" type="text/javascript" charset="utf-8"></script>
+
+<link rel="stylesheet" href="/static/ext/select2/select2.css">
+<script src="/static/ext/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
+
 ${ dashboard.import_layout() }
 
 ${ commonshare() | n,unicode }
@@ -381,7 +463,6 @@ ${ commonshare() | n,unicode }
 
 ${ dashboard.import_bindings() }
 
-
 <script src="/oozie/static/js/coordinator-editor.ko.js" type="text/javascript" charset="utf-8"></script>
 
 
@@ -389,7 +470,7 @@ ${ dashboard.import_bindings() }
   ${ utils.slaGlobal() }
 
   ${ utils.cron_js() }
-  
+
   var coordCron =
     $('#coord-frequency')
       .jqCron({
@@ -406,7 +487,9 @@ ${ dashboard.import_bindings() }
         default_period: 'day',
         default_value: ${ coordinator_json | n,unicode }.properties.cron_frequency,
         no_reset_button: true,
-        lang: 'i18n'
+        lang: 'i18n',
+        jquery_container: $('#jqCron-container'),
+        jquery_element: $('#jqCron-instance')
       })
       .jqCronGetInstance();
 
@@ -415,7 +498,7 @@ ${ dashboard.import_bindings() }
 
   viewModel.coordinator.properties.cron_advanced.valueHasMutated(); // Update jsCron enabled status
 
-  var shareViewModel = setupSharing("#documentShareModal");
+  var shareViewModel = initSharing("#documentShareModal");
   shareViewModel.setDocId(${ doc1_id });
 
   function showChooseWorkflow() {
@@ -426,7 +509,7 @@ ${ dashboard.import_bindings() }
     viewModel.coordinator.properties.workflow(wf.uuid());
     $("#chooseWorkflowDemiModal").modal("hide");
   }
-  
+
   $(document).on("showSubmitPopup", function(event, data){
     $('#submit-coord-modal').html(data);
     $('#submit-coord-modal').modal('show');

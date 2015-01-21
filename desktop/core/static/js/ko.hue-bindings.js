@@ -332,10 +332,10 @@ ko.bindingHandlers.daterangepicker = {
             '<span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span>' +
             '<input type="text" class="input-large form-control start-date-custom" />' +
             '</div>' +
-            '<a class="custom-popover" href="javascript:void(0)" data-trigger="click" data-toggle="popover" data-placement="right" rel="popover" data-html="true"' +
+            '<a class="custom-popover" href="javascript:void(0)" data-trigger="hover" data-toggle="popover" data-placement="right" rel="popover" data-html="true"' +
             '       title="' + KO_DATERANGEPICKER_LABELS.CUSTOM_POPOVER_TITLE + '"' +
             '       data-content="' + KO_DATERANGEPICKER_LABELS.CUSTOM_POPOVER_CONTENT + '">' +
-            '<i class="fa fa-question-circle"></i>' +
+            '&nbsp;&nbsp;<i class="fa fa-question-circle"></i>' +
             ' </a>' +
             '</div>' +
             '<div class="facet-field-cnt custom">' +
@@ -750,15 +750,27 @@ ko.bindingHandlers.codemirror = {
 };
 
 ko.bindingHandlers.chosen = {
-  init: function (element) {
-    ko.bindingHandlers.options.init(element);
-    $(element).chosen({disable_search_threshold: 5});
-  },
-  update: function (element, valueAccessor, allBindings) {
-    ko.bindingHandlers.options.update(element, valueAccessor, allBindings);
-    $(element).trigger('chosen:updated');
-  }
-};
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext){
+        var $element = $(element);
+        var options = ko.unwrap(valueAccessor());
+        
+        if (typeof options === 'object')
+            $element.chosen(options);
+        else
+            $element.chosen();
+                
+        ['options', 'selectedOptions', 'value'].forEach(function(propName){
+            if (allBindings.has(propName)){
+                var prop = allBindings.get(propName);
+                if (ko.isObservable(prop)){
+                    prop.subscribe(function(){
+                        $element.trigger('chosen:updated');
+                    });
+                }
+            }
+        });        
+    }
+}
 
 ko.bindingHandlers.tooltip = {
   init: function (element, valueAccessor) {
@@ -772,6 +784,11 @@ ko.bindingHandlers.tooltip = {
     ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
       $(element).tooltip("destroy");
     });
+  },
+  update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    var options = ko.utils.unwrapObservable(valueAccessor());
+    var self = $(element);
+    self.tooltip(options);
   }
 };
 
@@ -926,6 +943,20 @@ ko.bindingHandlers.select2 = {
       if (options.type == "scope" && viewModel.availablePrivileges().indexOf(options.update) == -1) {
         viewModel.availablePrivileges.push(options.update);
       }
+      if (options.type == "parameter" && options.update != "") {
+        var _found = false;
+        allBindingsAccessor().options().forEach(function(opt){
+          if (opt[allBindingsAccessor().optionsValue]() == options.update){
+            _found = true;
+          }
+        });
+        if (!_found){
+          allBindingsAccessor().options.push({
+            name: ko.observable(options.update),
+            value: ko.observable(options.update)
+          });
+        }
+      }
     }
     $(element)
         .select2(options)
@@ -972,6 +1003,20 @@ ko.bindingHandlers.select2 = {
                   viewModel.tempRoles.push(_r);
                   viewModel.roles.push(_r);
                 }
+                if (_type == "parameter") {
+                  var _found = false;
+                  allBindingsAccessor().options().forEach(function(opt){
+                    if (opt[allBindingsAccessor().optionsValue]() == _newVal){
+                      _found = true;
+                    }
+                  });
+                  if (!_found){
+                    allBindingsAccessor().options.push({
+                      name: ko.observable(_newVal),
+                      value: ko.observable(_newVal)
+                    });
+                  }
+                }
                 if (_isArray) {
                   var _vals = $(element).select2("val");
                   _vals.push(_newVal);
@@ -987,6 +1032,14 @@ ko.bindingHandlers.select2 = {
         })
   },
   update: function (element, valueAccessor, allBindingsAccessor, vm) {
+    if (typeof allBindingsAccessor().visible != "undefined"){
+      if ((typeof allBindingsAccessor().visible == "boolean" && allBindingsAccessor().visible) || (typeof allBindingsAccessor().visible == "function" && allBindingsAccessor().visible())) {
+        $(element).select2("container").show();
+      }
+      else {
+        $(element).select2("container").hide();
+      }
+    }
     if (typeof valueAccessor().update != "undefined") {
       $(element).select2("val", valueAccessor().update());
     }
@@ -1097,7 +1150,7 @@ function getFileBrowseButton(inputElement, selectFolder, valueAccessor, stripHdf
 
     function callFileChooser() {
       var _initialPath = $.trim(inputElement.val()) != "" ? inputElement.val() : "/";
-      if ((allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.skipInitialPathIfEmpty && inputElement.val() == "") || allBindingsAccessor().filechooserPrefixSeparator){
+      if ((allBindingsAccessor && allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.skipInitialPathIfEmpty && inputElement.val() == "") || (allBindingsAccessor && allBindingsAccessor().filechooserPrefixSeparator)){
         _initialPath = "";
       }
       if (inputElement.data("fullPath")){
@@ -1119,14 +1172,14 @@ function getFileBrowseButton(inputElement, selectFolder, valueAccessor, stripHdf
           handleChoice(filePath, stripHdfsPrefix);
           $("#chooseFile").modal("hide");
         },
-        createFolder: allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.createFolder,
-        uploadFile: allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.uploadFile,
+        createFolder: allBindingsAccessor && allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.createFolder,
+        uploadFile: allBindingsAccessor && allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.uploadFile,
         initialPath: _initialPath,
         errorRedirectPath: "",
         forceRefresh: true,
-        showExtraHome: allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.showExtraHome,
-        extraHomeProperties: allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.extraHomeProperties ? allBindingsAccessor().filechooserOptions.extraHomeProperties : {},
-        filterExtensions: allBindingsAccessor().filechooserFilter ? allBindingsAccessor().filechooserFilter : ""
+        showExtraHome: allBindingsAccessor && allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.showExtraHome,
+        extraHomeProperties: allBindingsAccessor && allBindingsAccessor().filechooserOptions && allBindingsAccessor().filechooserOptions.extraHomeProperties ? allBindingsAccessor().filechooserOptions.extraHomeProperties : {},
+        filterExtensions: allBindingsAccessor && allBindingsAccessor().filechooserFilter ? allBindingsAccessor().filechooserFilter : ""
       });
       $("#chooseFile").modal("show");
       $("#chooseFile").on("hidden", function(){
@@ -1135,7 +1188,7 @@ function getFileBrowseButton(inputElement, selectFolder, valueAccessor, stripHdf
     }
 
     function handleChoice(filePath, stripHdfsPrefix) {
-      if (allBindingsAccessor().filechooserPrefixSeparator){
+      if (allBindingsAccessor && allBindingsAccessor().filechooserPrefixSeparator){
         filePath = inputElement.val().split(allBindingsAccessor().filechooserPrefixSeparator)[0] + '=' + filePath;
       }
       if (stripHdfsPrefix){
@@ -1145,35 +1198,64 @@ function getFileBrowseButton(inputElement, selectFolder, valueAccessor, stripHdf
         inputElement.val("hdfs://" + filePath);
       }
       inputElement.change();
-      if (typeof valueAccessor() == "function" || typeof valueAccessor().value == "function") {
-        if (valueAccessor().value){
-          valueAccessor().value(inputElement.val());
-          if (valueAccessor().displayJustLastBit){
-            inputElement.data("fullPath", inputElement.val());
-            inputElement.attr("data-original-title", inputElement.val());
-            var _val = inputElement.val();
-            inputElement.val(_val.split("/")[_val.split("/").length - 1])
+      if (valueAccessor){
+        if (typeof valueAccessor() == "function" || typeof valueAccessor().value == "function") {
+          if (valueAccessor().value){
+            valueAccessor().value(inputElement.val());
+            if (valueAccessor().displayJustLastBit){
+              inputElement.data("fullPath", inputElement.val());
+              inputElement.attr("data-original-title", inputElement.val());
+              var _val = inputElement.val();
+              inputElement.val(_val.split("/")[_val.split("/").length - 1])
+            }
+          }
+          else {
+            valueAccessor()(inputElement.val());
           }
         }
         else {
-          valueAccessor()(inputElement.val());
+          valueAccessor(inputElement.val());
         }
-      }
-      else {
-        valueAccessor(inputElement.val());
       }
     }
   });
-  if (allBindingsAccessor().filechooserDisabled){
+  if (allBindingsAccessor && allBindingsAccessor().filechooserDisabled){
     _btn.addClass("disabled").attr("disabled", "disabled");
   }
   return _btn;
 }
 
-ko.bindingHandlers.tooltip = {
-  update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-    var options = ko.utils.unwrapObservable(valueAccessor());
-    var self = $(element);
-    self.tooltip(options);
-  }
-};
+ko.bindingHandlers.datepicker = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext){
+      var DATE_FORMAT = "YYYY-MM-DD";
+      var TIME_FORMAT = "HH:mm:ss";
+      var DATETIME_FORMAT = DATE_FORMAT + " " + TIME_FORMAT;
+      var _el = $(element);
+      var options = ko.unwrap(valueAccessor());
+      _el.datepicker({
+        format: DATE_FORMAT.toLowerCase()
+      }).on("changeDate", function () {
+        allBindings().value(_el.val());
+      });
+
+    }
+}
+
+
+ko.bindingHandlers.timepicker = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext){
+      var DATE_FORMAT = "YYYY-MM-DD";
+      var TIME_FORMAT = "HH:mm:ss";
+      var DATETIME_FORMAT = DATE_FORMAT + " " + TIME_FORMAT;
+      var _el = $(element);
+      var options = ko.unwrap(valueAccessor());
+
+      _el.timepicker({
+        minuteStep: 1,
+        showSeconds: true,
+        showMeridian: false,
+        defaultTime: false
+      });
+
+    }
+}
