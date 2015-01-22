@@ -136,7 +136,7 @@ def list_oozie_workflows(request):
     if request.GET.get('type') == 'progress':
       json_jobs = [oozie_api.get_job(job.id) for job in json_jobs]
 
-    return JsonResponse(massaged_oozie_jobs_for_json(json_jobs, request.user, just_sla), cls=JSONEncoderForHTML)
+    return JsonResponse(massaged_oozie_jobs_for_json(json_jobs, request.user, just_sla), encoder=JSONEncoderForHTML)
 
   return render('dashboard/list_oozie_workflows.mako', request, {
     'user': request.user,
@@ -242,7 +242,7 @@ def list_oozie_workflow(request, job_id):
       'graph': workflow_graph,
       'actions': massaged_workflow_actions_for_json(oozie_workflow.get_working_actions(), oozie_coordinator, oozie_bundle)
     }
-    return JsonResponse(return_obj, cls=JSONEncoderForHTML)
+    return JsonResponse(return_obj, encoder=JSONEncoderForHTML)
 
   oozie_slas = []
   if oozie_workflow.has_sla:
@@ -301,7 +301,7 @@ def list_oozie_coordinator(request, job_id):
       'actions': actions,
       'show_all_actions': show_all_actions
     }
-    return JsonResponse(return_obj, cls=JSONEncoderForHTML)
+    return JsonResponse(return_obj, encoder=JSONEncoderForHTML)
 
   oozie_slas = []
   if oozie_coordinator.has_sla:
@@ -391,7 +391,7 @@ def get_oozie_job_log(request, job_id):
     'log': oozie_job.log,
   }
 
-  return JsonResponse(return_obj, cls=JSONEncoderForHTML)
+  return JsonResponse(return_obj, encoder=JSONEncoderForHTML)
 
 
 @show_oozie_error

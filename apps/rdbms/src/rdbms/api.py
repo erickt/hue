@@ -164,7 +164,7 @@ def execute_query(request, design_id=None):
   except RuntimeError, e:
     response['message']= str(e)
 
-  return JsonResponse(response, cls=ResultEncoder)
+  return JsonResponse(response, encoder=ResultEncoder)
 
 
 @error_handler

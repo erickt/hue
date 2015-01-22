@@ -85,7 +85,7 @@ def job_not_assigned(request, jobid, path):
     except Exception, e:
       result['message'] = _('Error polling job %s: %s') % (jobid, e)
 
-    return JsonResponse(result, cls=JSONEncoderForHTML)
+    return JsonResponse(result, encoder=JSONEncoderForHTML)
   else:
     return render('job_not_assigned.mako', request, {'jobid': jobid, 'path': path})
 
@@ -108,7 +108,7 @@ def jobs(request):
       else:
         raise ex
     json_jobs  = [massage_job_for_json(job, request) for job in jobs]
-    return JsonResponse(json_jobs, cls=JSONEncoderForHTML)
+    return JsonResponse(json_jobs, encoder=JSONEncoderForHTML)
 
   return render('jobs.mako', request, {
     'request': request,
@@ -175,7 +175,7 @@ def single_spark_job(request, job):
     json_job = {
       'job': massage_job_for_json(job, request)
     }
-    return JsonResponse(json_job, cls=JSONEncoderForHTML)
+    return JsonResponse(json_job, encoder=JSONEncoderForHTML)
   else:
     return render('job.mako', request, {
       'request': request,
@@ -203,7 +203,7 @@ def single_job(request, job):
       'failedTasks': json_failed_tasks,
       'recentTasks': json_recent_tasks
     }
-    return JsonResponse(json_job, cls=JSONEncoderForHTML)
+    return JsonResponse(json_job, encoder=JSONEncoderForHTML)
 
   return render('job.mako', request, {
     'request': request,
@@ -240,7 +240,7 @@ def kill_job(request, job):
       if request.REQUEST.get("next"):
         return HttpResponseRedirect(request.REQUEST.get("next"))
       elif request.REQUEST.get("format") == "json":
-        return JsonResponse({'status': 0}, cls=JSONEncoderForHTML)
+        return JsonResponse({'status': 0}, encoder=JSONEncoderForHTML)
       else:
         raise MessageException("Job Killed")
     time.sleep(1)
