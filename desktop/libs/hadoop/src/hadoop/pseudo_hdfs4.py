@@ -71,7 +71,9 @@ class PseudoHdfs4(object):
     self._nm_proc = None
     self._hs_proc = None
 
-    self._fqdn = socket.getfqdn()
+    # We can't use `socket.getfqdn()` here because it may return an IPv6
+    # address, and Hadoop requires an IPv4 address.
+    self._fqdn = socket.gethostbyname(socket.gethostname())
 
     self._core_site = None
     self._hdfs_site = None
@@ -514,7 +516,9 @@ def shared_cluster():
     except Exception, ex:
       LOG.exception("Failed to fully bring up test cluster: %s" % (ex,))
 
-    fqdn = socket.getfqdn()
+    # We can't use `socket.getfqdn()` here because it may return an IPv6
+    # address, and Hadoop requires an IPv4 address.
+    fqdn = socket.gethostbyname(socket.gethostname())
     webhdfs_url = "http://%s:%s/webhdfs/v1" % (fqdn, cluster.dfs_http_port,)
 
     closers = [
