@@ -39,6 +39,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
 
+from desktop import redaction
+from desktop.redaction import logfilter
 from desktop.lib.django_test_util import make_logged_in_client, assert_equal_mod_whitespace
 from desktop.lib.test_utils import grant_access, add_to_group
 from desktop.lib.security_util import get_localhost_name
@@ -1432,6 +1434,17 @@ for x in sys.stdin:
     resp = self.client.get("/metastore/databases/")
     assert_true('my_db' in resp.context['databases'], resp)
 
+    # Test for accented characters in 'comment'
+    resp = self.client.post("/beeswax/create/database", {
+      'name': 'credito',
+      'comment': 'crédito',
+      'create': 'Create database',
+      'use_default_location': True,
+    }, follow=True)
+    resp = self.client.get(reverse("beeswax:api_watch_query_refresh_json", kwargs={'id': resp.context['query'].id}), follow=True)
+    resp = wait_for_query_to_finish(self.client, resp, max=180.0)
+    resp = self.client.get("/metastore/databases/")
+    assert_true('credito' in resp.context['databases'], resp)
 
   def test_select_query_server(self):
     c = make_logged_in_client()
@@ -1493,6 +1506,41 @@ for x in sys.stdin:
     assert_equal(resp.status_code, 200)
     assert_true('<th>foo</th>' in resp.content, resp.content)
     assert_true([0, '0x0'] in resp.context['sample'], resp.context['sample'])
+
+  def test_redacting_queries(self):
+    c = make_logged_in_client()
+
+    rule = r'ssn=::ssn=\d{3}-\d{2}-\d{4}::ssn=XXX-XX-XXXX'
+    old_rules = redaction.global_redaction_engine.rules
+    redaction.global_redaction_engine.rules = []
+    redaction.global_redaction_engine.add_rules_from_string(rule)
+
+    logfilter.add_log_redaction_filter_to_logger(redaction.global_redaction_engine, logging.root)
+
+    try:
+      # Make sure redacted queries are redacted.
+      query = 'SELECT "ssn=123-45-6789"'
+      expected_query = 'SELECT "ssn=XXX-XX-XXXX"'
+
+      resp = make_query(c, query)
+      content = json.loads(resp.content)
+      query_id = content['id']
+      history = beeswax.models.QueryHistory.objects.get(pk=query_id)
+      assert_equal(history.query, expected_query)
+      assert_true(history.is_redacted)
+
+      # Make sure unredacted queries are not redacted.
+      query = 'SELECT "hello"'
+      expected_query = 'SELECT "hello"'
+
+      resp = make_query(c, query)
+      content = json.loads(resp.content)
+      query_id = content['id']
+      history = beeswax.models.QueryHistory.objects.get(pk=query_id)
+      assert_equal(history.query, expected_query)
+      assert_false(history.is_redacted)
+    finally:
+      redaction.global_redaction_engine.rules = old_rules
 
 
 def test_import_gzip_reader():
@@ -2078,6 +2126,45 @@ class TestWithMockedServer(object):
     resp = self.client.get('/beeswax/query_history?format=json')
     assert_true(sql_escaped in resp.content, resp.content)
     assert_false(sql in resp.content, resp.content)
+
+  def test_redact_saved_design(self):
+    rule = r'ssn=::ssn=\d{3}-\d{2}-\d{4}::ssn=XXX-XX-XXXX'
+    old_rules = redaction.global_redaction_engine.rules
+    redaction.global_redaction_engine.rules = []
+    redaction.global_redaction_engine.add_rules_from_string(rule)
+
+    logfilter.add_log_redaction_filter_to_logger(redaction.global_redaction_engine, logging.root)
+
+    try:
+      # Make sure redacted queries are redacted.
+      query = 'SELECT "ssn=123-45-6789"'
+      expected_query = 'SELECT "ssn=XXX-XX-XXXX"'
+
+      response = _make_query(self.client, query, submission_type='Save', name='My Name 1', desc='My Description')
+      content = json.loads(response.content)
+      design_id = content['design_id']
+
+      design = SavedQuery.get(id=design_id)
+      data = json.loads(design.data)
+
+      assert_equal(data['query']['query'], expected_query)
+      assert_true(design.is_redacted)
+
+      # Make sure unredacted queries are not redacted.
+      query = 'SELECT "hello"'
+      expected_query = 'SELECT "hello"'
+
+      response = _make_query(self.client, query, submission_type='Save', name='My Name 2', desc='My Description')
+      content = json.loads(response.content)
+      design_id = content['design_id']
+
+      design = SavedQuery.get(id=design_id)
+      data = json.loads(design.data)
+
+      assert_equal(data['query']['query'], expected_query)
+      assert_false(design.is_redacted)
+    finally:
+      redaction.global_redaction_engine.rules = old_rules
 
 
 class TestDesign():

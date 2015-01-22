@@ -76,6 +76,8 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
   </div>
 
   <form class="form-search">
+    <span data-bind="visible: coordinator.id() == null" class="muted">${ _('Unsaved') }&nbsp;&nbsp;&nbsp;</span>
+
     <div class="inline object-name">
       <span data-bind="editable: $root.coordinator.name, editableOptions: {enabled: $root.isEditing(), placement: 'right'}"></span>
     </div>
@@ -123,7 +125,7 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
             <label class="control-label">${ _('Crontab') }</label>
             <div class="controls">
               <input id="coord-frequency" type="text" data-bind="value: coordinator.properties.cron_frequency" name="cron_frequency"/>
-              <span class="help-inline"><a data-bind="visible: coordinator.properties.cron_advanced" href="http://quartz-scheduler.org/api/2.0.0/org/quartz/CronExpression.html" target="_blank">
+              <span class="help-inline"><a data-bind="visible: coordinator.properties.cron_advanced" href="http://quartz-scheduler.org/api/2.2.0/org/quartz/CronExpression.html" target="_blank">
                 <i class="fa fa-question-circle" title="${ _('Check syntax ?') }"></i></a>
               </span>
             </div>
@@ -240,6 +242,10 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
               
               <input type="text" data-bind="value: dataset_variable, filechooser: dataset_variable" style="margin-bottom:0; width: 300px" class="filechooser-input" />
 
+              <a href="#" data-bind="click: function(){ $root.coordinator.variables.remove(this); }, visible: $root.isEditing">
+                <i class="fa fa-minus"></i>
+              </a>
+
               <!-- ko if: dataset_type() == 'input_path' || dataset_type() == 'output_path' -->
 
 
@@ -252,10 +258,6 @@ ${ commonheader(_("Coordinator Editor"), "Oozie", user) | n,unicode }
 
               <a href="#" data-bind="click: function() { show_advanced(! show_advanced()) }">
                 <i class="fa fa-sliders"></i>
-              </a>
-
-              <a href="#" data-bind="click: function(){ $root.coordinator.variables.remove(this); }, visible: $root.isEditing">
-                <i class="fa fa-minus"></i>
               </a>
 
               <div data-bind="visible: show_advanced" style="padding: 20px">

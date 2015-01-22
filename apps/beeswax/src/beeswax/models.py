@@ -18,6 +18,7 @@
 import base64
 import datetime
 import logging
+import json
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -29,6 +30,7 @@ from enum import Enum
 
 from librdbms.server import dbms as librdbms_dbms
 
+from desktop.redaction import global_redaction_engine
 from desktop.lib.exceptions_renderable import PopupException
 from desktop.models import Document
 
@@ -72,13 +74,15 @@ class QueryHistory(models.Model):
   log_context = models.CharField(max_length=1024, null=True)
 
   server_host = models.CharField(max_length=128, help_text=_('Host of the query server.'), default='')
-  server_port = models.SmallIntegerField(help_text=_('Port of the query server.'), default=0)
+  server_port = models.PositiveIntegerField(help_text=_('Port of the query server.'), default=10000)
   server_name = models.CharField(max_length=128, help_text=_('Name of the query server.'), default='')
   server_type = models.CharField(max_length=128, help_text=_('Type of the query server.'), default=BEESWAX, choices=SERVER_TYPE)
   query_type = models.SmallIntegerField(help_text=_('Type of the query.'), default=HQL, choices=((HQL, 'HQL'), (IMPALA, 'IMPALA')))
 
   design = models.ForeignKey('SavedQuery', to_field='id', null=True) # Some queries (like read/create table) don't have a design
   notify = models.BooleanField(default=False)                        # Notify on completion
+
+  is_redacted = models.BooleanField(default=False)
 
 
   class Meta:
@@ -167,6 +171,23 @@ class QueryHistory(models.Model):
   def set_to_expired(self):
     self.last_state = QueryHistory.STATE.expired.index
 
+  def save(self, *args, **kwargs):
+    """
+    Override `save` to optionally mask out the query from being saved to the
+    database. This is because if the beeswax database contains sensitive
+    information like personally identifiable information, that information
+    could be leaked into the Hue database and logfiles.
+    """
+
+    if global_redaction_engine.is_enabled():
+      redacted_query = global_redaction_engine.redact(self.query)
+
+      if self.query != redacted_query:
+        self.query = redacted_query
+        self.is_redacted = True
+
+    super(QueryHistory, self).save(*args, **kwargs)
+
 
 def make_query_context(type, info):
   """
@@ -185,14 +206,14 @@ def make_query_context(type, info):
 class HiveServerQueryHistory(QueryHistory):
   # Map from (thrift) server state
   STATE_MAP = {
-    TOperationState.INITIALIZED_STATE          : QueryHistory.STATE.submitted,
-    TOperationState.RUNNING_STATE         : QueryHistory.STATE.running,
-    TOperationState.FINISHED_STATE      : QueryHistory.STATE.available,
-    TOperationState.CANCELED_STATE          : QueryHistory.STATE.failed,
-    TOperationState.CLOSED_STATE         : QueryHistory.STATE.expired,
-    TOperationState.ERROR_STATE        : QueryHistory.STATE.failed,
-    TOperationState.UKNOWN_STATE        : QueryHistory.STATE.failed,
-    TOperationState.PENDING_STATE        : QueryHistory.STATE.submitted,
+    TOperationState.INITIALIZED_STATE : QueryHistory.STATE.submitted,
+    TOperationState.RUNNING_STATE     : QueryHistory.STATE.running,
+    TOperationState.FINISHED_STATE    : QueryHistory.STATE.available,
+    TOperationState.CANCELED_STATE    : QueryHistory.STATE.failed,
+    TOperationState.CLOSED_STATE      : QueryHistory.STATE.expired,
+    TOperationState.ERROR_STATE       : QueryHistory.STATE.failed,
+    TOperationState.UKNOWN_STATE      : QueryHistory.STATE.failed,
+    TOperationState.PENDING_STATE     : QueryHistory.STATE.submitted,
   }
 
   node_type = HIVE_SERVER2
@@ -243,6 +264,8 @@ class SavedQuery(models.Model):
   is_trashed = models.BooleanField(default=False, db_index=True, verbose_name=_t('Is trashed'),
                                    help_text=_t('If this query is trashed.'))
 
+  is_redacted = models.BooleanField(default=False)
+
   doc = generic.GenericRelation(Document, related_name='hql_doc')
 
   class Meta:
@@ -271,13 +294,18 @@ class SavedQuery(models.Model):
     design = SavedQuery(owner=owner, type=query_type)
     design.name = SavedQuery.DEFAULT_NEW_DESIGN_NAME
     design.desc = ''
-    design.data = data
+
+    if global_redaction_engine.is_enabled():
+      design.data = global_redaction_engine.redact(data)
+    else:
+      design.data = data
+
     design.is_auto = True
     design.save()
 
     Document.objects.link(design, owner=design.owner, extra=design.type, name=design.name, description=design.desc)
-    design.doc.get().add_to_history()    
-    
+    design.doc.get().add_to_history()
+
     return design
 
   @staticmethod
@@ -319,6 +347,31 @@ class SavedQuery(models.Model):
 
   def get_absolute_url(self):
     return reverse(QueryHistory.get_type_name(self.type) + ':execute_design', kwargs={'design_id': self.id})
+
+  def save(self, *args, **kwargs):
+    """
+    Override `save` to optionally mask out the query from being saved to the
+    database. This is because if the beeswax database contains sensitive
+    information like personally identifiable information, that information
+    could be leaked into the Hue database and logfiles.
+    """
+
+    if global_redaction_engine.is_enabled():
+      data = json.loads(self.data)
+
+      try:
+        query = data['query']['query']
+      except KeyError:
+        pass
+      else:
+        redacted_query = global_redaction_engine.redact(query)
+
+        if query != redacted_query:
+          data['query']['query'] = redacted_query
+          self.is_redacted = True
+          self.data = json.dumps(data)
+
+    super(SavedQuery, self).save(*args, **kwargs)
 
 
 class SessionManager(models.Manager):
