@@ -186,7 +186,7 @@ def download(request):
 
     if file_format == 'json':
       docs = json.loads(response.content)['response']['docs']
-      resp = JsonResponse(docs)
+      resp = JsonResponse(docs, safe=False)
       resp['Content-Disposition'] = 'attachment; filename=%s.%s' % ('query_result', file_format)
       return resp
     else:
