@@ -34,7 +34,7 @@ from django.http import HttpResponseNotAllowed
 from django.core.urlresolvers import resolve
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import ugettext as _
-from django.utils.http import urlquote
+from django.utils.http import urlquote, is_safe_url
 from django.utils.encoding import iri_to_uri
 import django.views.static
 
@@ -621,13 +621,20 @@ class EnsureSafeRedirectURLMiddleware(object):
   """
   Middleware to white list configured redirect URLs.
   """
+
+  def __init__(self, *args, **kwargs):
+    super(EnsureSafeRedirectURLMiddleware, self).__init__(*args, **kwargs)
+
+    self.redirection_patterns = desktop.conf.REDIRECT_WHITELIST.get()
+
   def process_response(self, request, response):
     if response.status_code in (301, 302, 303, 305, 307, 308) and response.get('Location'):
-      redirection_pattern =  desktop.conf.REDIRECT_WHITELIST.get()
-      if 'HTTP_HOST' in request.META.keys():
-        redirection_pattern.append(re.compile(r"^http:\/\/" + request.META.get('HTTP_HOST') + ".*$"))
+      location = response['Location']
 
-      if any([regexp.match(response['Location']) for regexp in redirection_pattern]):
+      if any(regexp.match(location) for regexp in self.redirection_patterns):
+        return response
+
+      if is_safe_url(location, request.get_host()):
         return response
 
       response = render("error.mako", request, dict(error=_('Redirect to %s is not allowed.') % response['Location']))
