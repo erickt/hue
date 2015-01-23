@@ -40,7 +40,7 @@ from django.views.static import was_modified_since
 from django.shortcuts import redirect
 from django.template.defaultfilters import urlencode
 from django.utils.functional import curry
-from django.utils.http import http_date, urlquote
+from django.utils.http import http_date
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from cStringIO import StringIO
@@ -50,6 +50,7 @@ from avro import datafile, io
 from desktop.lib import i18n, paginator
 from desktop.lib.conf import coerce_bool
 from desktop.lib.django_util import make_absolute, render, render_json, format_preserving_redirect
+from desktop.lib.django_util import JsonResponse
 from desktop.lib.exceptions_renderable import PopupException
 from hadoop.fs.hadoopfs import Hdfs
 from hadoop.fs.exceptions import WebHdfsException
@@ -176,7 +177,7 @@ def view(request, path):
           exception = {
             'error': msg
           }
-          return render_json(exception)
+          return JsonResponse(exception)
         else:
           raise PopupException(msg , detail=e)
 
@@ -483,7 +484,7 @@ def _massage_stats(request, stats):
         'type': filetype(stats['mode']),
         'rwx': rwx(stats['mode'], stats['aclBit']),
         'mode': stringformat(stats['mode'], "o"),
-        'url': make_absolute(request, "view", dict(path=urlquote(normalized))),
+        'url': make_absolute(request, "view", dict(path=normalized)),
         'is_sentry_managed': request.fs.is_sentry_managed(path)
     }
 
@@ -498,7 +499,7 @@ def stat(request, path):
     if not request.fs.exists(path):
         raise Http404(_("File not found: %(path)s") % {'path': escape(path)})
     stats = request.fs.stats(path)
-    return render_json(_massage_stats(request, stats))
+    return JsonResponse(_massage_stats(request, stats))
 
 
 def display(request, path):
