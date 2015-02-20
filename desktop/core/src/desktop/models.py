@@ -454,16 +454,16 @@ class Document(models.Model):
     try:
       if self.content_type.app_label == 'beeswax':
         if self.extra == '0':
-          return apps['beeswax'].icon_path
+          return settings.STATIC_URL + apps['beeswax'].icon_path
         elif self.extra == '3':
-          return apps['spark'].icon_path
+          return settings.STATIC_URL + apps['spark'].icon_path
         else:
-          return apps['impala'].icon_path
+          return settings.STATIC_URL + apps['impala'].icon_path
       elif self.content_type.app_label == 'oozie':
         if self.extra == 'jobsub':
-          return apps['jobsub'].icon_path
+          return settings.STATIC_URL + apps['jobsub'].icon_path
         else:
-          return self.content_type.model_class().ICON
+          return settings.STATIC_URL + self.content_type.model_class().ICON
       elif self.content_type.app_label in apps:
         return settings.STATIC_URL + apps[self.content_type.app_label].icon_path
       else:

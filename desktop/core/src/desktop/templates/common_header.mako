@@ -44,7 +44,7 @@ from django.utils.translation import ugettext as _
   <meta charset="utf-8">
   <title>Hue ${get_nice_name(current_app, section)} ${get_title(title)}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="${ STATIC_URL }/desktop/art/favicon.ico" />
+  <link rel="icon" type="image/x-icon" href="${ STATIC_URL }desktop/art/favicon.ico" />
   <meta name="description" content="">
   <meta name="author" content="">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -363,22 +363,22 @@ from django.utils.translation import ugettext as _
          <a title="${_('Query data')}" rel="navigator-tooltip" href="#" data-toggle="dropdown" class="dropdown-toggle">Query Editors <b class="caret"></b></a>
          <ul role="menu" class="dropdown-menu">
            % if 'beeswax' in apps:
-           <li><a href="/${apps['beeswax'].display_name}"><img src="${ apps['beeswax'].icon_path }" class="app-icon"/> ${_('Hive')}</a></li>
+           <li><a href="/${apps['beeswax'].display_name}"><img src="${ STATIC_URL }${ apps['beeswax'].icon_path }" class="app-icon"/> ${_('Hive')}</a></li>
            % endif
            % if 'impala' in apps:
-           <li><a href="/${apps['impala'].display_name}"><img src="${ apps['impala'].icon_path }" class="app-icon"/> ${_('Impala')}</a></li>
+           <li><a href="/${apps['impala'].display_name}"><img src="${ STATIC_URL }${ apps['impala'].icon_path }" class="app-icon"/> ${_('Impala')}</a></li>
            % endif
            % if 'rdbms' in apps:
-           <li><a href="/${apps['rdbms'].display_name}"><img src="${ apps['rdbms'].icon_path }" class="app-icon"/> ${_('DB Query')}</a></li>
+           <li><a href="/${apps['rdbms'].display_name}"><img src="${ STATIC_URL }${ apps['rdbms'].icon_path }" class="app-icon"/> ${_('DB Query')}</a></li>
            % endif
            % if 'pig' in apps:
-           <li><a href="/${apps['pig'].display_name}"><img src="${ apps['pig'].icon_path }" class="app-icon"/> ${_('Pig')}</a></li>
+           <li><a href="/${apps['pig'].display_name}"><img src="${ STATIC_URL }${ apps['pig'].icon_path }" class="app-icon"/> ${_('Pig')}</a></li>
            % endif
            % if 'jobsub' in apps:
-           <li><a href="/${apps['jobsub'].display_name}"><img src="${ apps['jobsub'].icon_path }" class="app-icon"/> ${_('Job Designer')}</a></li>
+           <li><a href="/${apps['jobsub'].display_name}"><img src="${ STATIC_URL }${ apps['jobsub'].icon_path }" class="app-icon"/> ${_('Job Designer')}</a></li>
            % endif
            % if 'spark' in apps:
-           <li><a href="/${apps['spark'].display_name}"><img src="${ apps['spark'].icon_path }" class="app-icon"/> ${_('Spark')}</a></li>
+           <li><a href="/${apps['spark'].display_name}"><img src="${ STATIC_URL }${ apps['spark'].icon_path }" class="app-icon"/> ${_('Spark')}</a></li>
            % endif
          </ul>
        </li>
@@ -393,16 +393,16 @@ from django.utils.translation import ugettext as _
          <a title="${_('Manage data')}" rel="navigator-tooltip" href="#" data-toggle="dropdown" class="dropdown-toggle">${_('Data Browsers')} <b class="caret"></b></a>
          <ul role="menu" class="dropdown-menu">
            % if 'metastore' in apps:
-           <li><a href="/${apps['metastore'].display_name}"><img src="${ apps['metastore'].icon_path }" class="app-icon"/> ${_('Metastore Tables')}</a></li>
+           <li><a href="/${apps['metastore'].display_name}"><img src="${ STATIC_URL }${ apps['metastore'].icon_path }" class="app-icon"/> ${_('Metastore Tables')}</a></li>
            % endif
            % if 'hbase' in apps:
-           <li><a href="/${apps['hbase'].display_name}"><img src="${ apps['hbase'].icon_path }" class="app-icon"/> ${_('HBase')}</a></li>
+           <li><a href="/${apps['hbase'].display_name}"><img src="${ STATIC_URL }${ apps['hbase'].icon_path }" class="app-icon"/> ${_('HBase')}</a></li>
            % endif
            % if 'sqoop' in apps:
-           <li><a href="/${apps['sqoop'].display_name}"><img src="${ apps['sqoop'].icon_path }" class="app-icon"/> ${_('Sqoop Transfer')}</a></li>
+           <li><a href="/${apps['sqoop'].display_name}"><img src="${ STATIC_URL }${ apps['sqoop'].icon_path }" class="app-icon"/> ${_('Sqoop Transfer')}</a></li>
            % endif
            % if 'zookeeper' in apps:
-           <li><a href="/${apps['zookeeper'].display_name}"><img src="${ apps['zookeeper'].icon_path }" class="app-icon"/> ${_('ZooKeeper')}</a></li>
+           <li><a href="/${apps['zookeeper'].display_name}"><img src="${ STATIC_URL }${ apps['zookeeper'].icon_path }" class="app-icon"/> ${_('ZooKeeper')}</a></li>
            % endif
          </ul>
        </li>
@@ -414,7 +414,7 @@ from django.utils.translation import ugettext as _
          <a title="${_('Schedule with Oozie')}" rel="navigator-tooltip" href="#" data-toggle="dropdown" class="dropdown-toggle">${_('Workflows')} <b class="caret"></b></a>
          <ul role="menu" class="dropdown-menu">
            <li class="dropdown-submenu">
-             <a href="${ url('oozie:index') }"><img src="${ STATIC_URL }/oozie/art/icon_oozie_dashboard_48.png" class="app-icon" /> ${_('Dashboards')}</a>
+             <a href="${ url('oozie:index') }"><img src="${ STATIC_URL }oozie/art/icon_oozie_dashboard_48.png" class="app-icon" /> ${_('Dashboards')}</a>
              <ul class="dropdown-menu">
                <li><a href="${url('oozie:list_oozie_workflows')}"><img src="${ STATIC_URL }/oozie/art/icon_oozie_workflow_48.png" class="app-icon"/> ${_('Workflows')}</a></li>
                <li><a href="${url('oozie:list_oozie_coordinators')}"><img src="${ STATIC_URL }/oozie/art/icon_oozie_coordinator_48.png" class="app-icon" /> ${_('Coordinators')}</a></li>
@@ -456,7 +456,7 @@ from django.utils.translation import ugettext as _
              <a title="${_('Solr Search')}" rel="navigator-tooltip" href="#" data-toggle="dropdown" class="dropdown-toggle">${_('Search')} <b class="caret"></b></a>
              <ul role="menu" class="dropdown-menu">
                % for collection in collections:
-               <li><a href="${ url('search:index') }?collection=${ collection.id }"><img src="${ collection.icon }" class="app-icon"/> ${ collection.label }</a></li>
+               <li><a href="${ url('search:index') }?collection=${ collection.id }"><img src="${ STATIC_URL }${ collection.icon }" class="app-icon"/> ${ collection.label }</a></li>
                % endfor
                % if 'indexer' in apps:
                  <li class="divider"></li>
@@ -480,7 +480,7 @@ from django.utils.translation import ugettext as _
          <a href="#" data-toggle="dropdown" class="dropdown-toggle">${_('Other apps')} <b class="caret"></b></a>
          <ul role="menu" class="dropdown-menu">
            % for other in other_apps:
-             <li><a href="/${ other.display_name }"><img src="${ other.icon_path }" class="app-icon"/> ${ other.nice_name }</a></li>
+             <li><a href="/${ other.display_name }"><img src="${ STATIC_URL }${ other.icon_path }" class="app-icon"/> ${ other.nice_name }</a></li>
            % endfor
          </ul>
        </li>
