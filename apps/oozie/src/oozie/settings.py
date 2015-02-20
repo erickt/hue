@@ -14,11 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.conf import settings
-
 DJANGO_APPS=['oozie']
 NICE_NAME = "Oozie Editor/Dashboard"
-ICON = settings.STATIC_URL + 'oozie/art/icon_oozie_48.png"
+ICON = "oozie/art/icon_oozie_48.png"
 MENU_INDEX = 41
 
 REQUIRES_HADOOP = True

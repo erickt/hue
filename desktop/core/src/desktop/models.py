@@ -465,7 +465,7 @@ class Document(models.Model):
         else:
           return self.content_type.model_class().ICON
       elif self.content_type.app_label in apps:
-        return apps[self.content_type.app_label].icon_path
+        return settings.STATIC_URL + apps[self.content_type.app_label].icon_path
       else:
         return settings.STATIC_URL + 'desktop/art/icon_hue_48.png'
     except Exception, e:

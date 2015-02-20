@@ -14,12 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.conf import settings
-
 DJANGO_APPS = [ "security" ]
 NICE_NAME = "Hadoop Security"
 REQUIRES_HADOOP = False
-ICON = settings.STATIC_URL + "security/art/icon_security_24.png"
+ICON = "security/art/icon_security_24.png"
 MENU_INDEX = 61
 
 IS_URL_NAMESPACED = True

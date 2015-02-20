@@ -15,12 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.conf import settings
-
 DJANGO_APPS = ['metastore']
 NICE_NAME = "Metastore Manager"
 REQUIRES_HADOOP = True
-ICON = settings.STATIC_URL + "metastore/art/icon_metastore_48.png"
+ICON = "metastore/art/icon_metastore_48.png"
 MENU_INDEX = 20
 
 IS_URL_NAMESPACED = True

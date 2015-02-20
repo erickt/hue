@@ -13,13 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from django.conf import settings
-
 DJANGO_APPS = [ "beeswax" ]
 NICE_NAME = "Hive Editor"
 REQUIRES_HADOOP = True
-ICON = settings.STATIC_URL + "beeswax/art/icon_beeswax_48.png"
+ICON = "beeswax/art/icon_beeswax_48.png"
 MENU_INDEX = 10
 
 IS_URL_NAMESPACED = True

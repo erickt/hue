@@ -13,11 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from django.conf import settings
-
 DJANGO_APPS = ['help']
 NICE_NAME = "Help"
 REQUIRES_HADOOP = False
-ICON = settings.STATIC_URL + 'help/art/icon_help_24.png"
+ICON = "help/art/icon_help_24.png"
 MENU_INDEX = 90

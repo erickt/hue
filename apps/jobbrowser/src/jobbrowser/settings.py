@@ -18,10 +18,8 @@
 # Django settings for jobbrowser project.
 #
 
-from django.conf import settings
-
 DJANGO_APPS = ['jobbrowser']
 NICE_NAME = "Job Browser"
 REQUIRES_HADOOP = True
-ICON = settings.STATIC_URL + "jobbrowser/art/icon_jobbrowser_48.png"
+ICON = "jobbrowser/art/icon_jobbrowser_48.png"
 MENU_INDEX = 30

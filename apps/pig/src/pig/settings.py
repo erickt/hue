@@ -13,13 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from django.conf import settings
-
 DJANGO_APPS = ['pig']
 NICE_NAME = 'Pig Editor'
 MENU_INDEX = 12
-ICON = settings.STATIC_URL + 'pig/art/icon_pig_48.png'
+ICON = 'pig/art/icon_pig_48.png'
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True

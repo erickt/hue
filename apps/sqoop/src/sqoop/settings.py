@@ -13,13 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from django.conf import settings
-
 DJANGO_APPS = ['sqoop']
 NICE_NAME = 'Sqoop'
 MENU_INDEX = 20
-ICON = settings.STATIC_URL + 'sqoop/art/icon_sqoop_48.png'
+ICON = 'sqoop/art/icon_sqoop_48.png'
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True
