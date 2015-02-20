@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = ['spark']
 NICE_NAME = 'Spark Editor'
 MENU_INDEX = 11
-ICON = '/static/spark/art/icon_spark_48.png'
+ICON = settings.STATIC_URL + 'spark/art/icon_spark_48.png'
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True

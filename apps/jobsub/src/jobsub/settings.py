@@ -13,11 +13,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from django.conf import settings
+
 DJANGO_APPS=['jobsub']
 NICE_NAME = "Job Designer"
 REQUIRES_HADOOP = True
 
 MIDDLEWARE_CLASSES=[]
 
-ICON = "${ STATIC_URL }/jobsub/art/icon_jobsub_48.png"
+ICON = settings.STATIC_URL + "jobsub/art/icon_jobsub_48.png"
 MENU_INDEX = 40

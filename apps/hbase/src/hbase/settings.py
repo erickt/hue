@@ -13,10 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from django.conf import settings
+
 DJANGO_APPS = ['hbase']
 NICE_NAME = 'HBase Browser'
 MENU_INDEX = 55
-ICON = '/static/hbase/art/icon_hbase_48.png'
+ICON = settings.STATIC_URL + 'hbase/art/icon_hbase_48.png'
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True

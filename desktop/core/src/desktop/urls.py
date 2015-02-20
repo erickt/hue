@@ -38,8 +38,8 @@ from desktop import appmanager
 # Django expects handler404 and handler500 to be defined.
 # django.conf.urls provides them. But we want to override them.
 # Also see http://code.djangoproject.com/ticket/5350
-#handler404 = 'desktop.views.serve_404_error'
-#handler500 = 'desktop.views.serve_500_error'
+handler404 = 'desktop.views.serve_404_error'
+handler500 = 'desktop.views.serve_500_error'
 
 
 # Set up /static/appname mappings for any apps that have static directories

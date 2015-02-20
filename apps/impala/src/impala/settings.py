@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = ['impala']
 NICE_NAME = 'Impala Editor'
 MENU_INDEX = 11
-ICON = '/static/impala/art/icon_impala_48.png'
+ICON = settings.STATIC_URL + 'impala/art/icon_impala_48.png'
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True

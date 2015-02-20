@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = ['rdbms']
 NICE_NAME = 'RDBMS UI'
 MENU_INDEX = 11
-ICON = '/static/rdbms/art/icon_rdbms_48.png'
+ICON = settings.STATIC_URL + 'rdbms/art/icon_rdbms_48.png'
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True

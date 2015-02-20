@@ -21,6 +21,7 @@ import logging
 import numbers
 import re
 
+from django.conf import settings
 from django.db import models
 from django.utils.html import escape
 from django.utils.translation import ugettext as _, ugettext_lazy as _t
@@ -240,7 +241,7 @@ class Collection(models.Model):
   sorting = models.ForeignKey(Sorting)
 
   _ATTRIBUTES = ['collection', 'layout', 'autocomplete']
-  ICON = '/static/search/art/icon_search_48.png'
+  ICON = settings.STATIC_URL + 'search/art/icon_search_48.png'
 
   objects = CollectionManager()
 
@@ -380,13 +381,13 @@ class Collection(models.Model):
   @property
   def icon(self):
     if self.name == 'twitter_demo':
-      return '/static/search/art/icon_twitter_48.png'
+      return settings.STATIC_URL + 'search/art/icon_twitter_48.png'
     elif self.name == 'yelp_demo':
-      return '/static/search/art/icon_yelp_48.png'
+      return settings.STATIC_URL + 'search/art/icon_yelp_48.png'
     elif self.name == 'log_analytics_demo':
-      return '/static/search/art/icon_logs_48.png'
+      return settings.STATIC_URL + 'search/art/icon_logs_48.png'
     else:
-      return '/static/search/art/icon_search_48.png'
+      return settings.STATIC_URL + 'search/art/icon_search_48.png'
 
   def _import_hue_3_5_collections(self, props, user):
     props['collection']['template']['template'] = self.result.get_template()

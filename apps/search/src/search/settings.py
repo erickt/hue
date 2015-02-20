@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = ["search"]
 NICE_NAME = "Solr Search"
 MENU_INDEX = 42
-ICON = "${ STATIC_URL }/search/art/icon_search_48.png"
+ICON = settings.STATIC_URL + "search/art/icon_search_48.png"
 
 REQUIRES_HADOOP = False
 IS_URL_NAMESPACED = True

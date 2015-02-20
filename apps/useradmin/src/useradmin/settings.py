@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = [ "useradmin" ]
 NICE_NAME = "User Admin"
 REQUIRES_HADOOP = False
-ICON = "${ STATIC_URL }/useradmin/art/icon_useradmin_48.png"
+ICON = settings.STATIC_URL + "useradmin/art/icon_useradmin_48.png"
 MENU_INDEX = 60
 
 PERMISSION_ACTIONS = (

@@ -27,13 +27,14 @@ from datetime import datetime,  timedelta
 from string import Template
 from itertools import chain
 
-from django.db import models
-from django.db.models import Q
-from django.core.urlresolvers import reverse
-from django.core.validators import RegexValidator
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
+from django.db import models
+from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _, ugettext_lazy as _t
@@ -339,7 +340,7 @@ class Workflow(Job):
   objects = WorkflowManager()
 
   HUE_ID = 'hue-id-w'
-  ICON = '/static/oozie/art/icon_oozie_workflow_48.png'
+  ICON = settings.STATIC_URL + 'oozie/art/icon_oozie_workflow_48.png'
   METADATA_FORMAT_VERSION = "0.0.1"
 
   def get_type(self):
@@ -1415,7 +1416,7 @@ class Coordinator(Job):
                                     help_text=_t('Additional properties to transmit to the workflow, e.g. limit=100, and EL functions, e.g. username=${coord:user()}'))
 
   HUE_ID = 'hue-id-c'
-  ICON = '/static/oozie/art/icon_oozie_coordinator_48.png'
+  ICON = settings.STATIC_URL + 'oozie/art/icon_oozie_coordinator_48.png'
   METADATA_FORMAT_VERSION = "0.0.1"
   CRON_MAPPING = {
     '0,15,30,45 * * * *': _('Every 15 minutes'),
@@ -1762,7 +1763,7 @@ class Bundle(Job):
   coordinators = models.ManyToManyField(Coordinator, through='BundledCoordinator')
 
   HUE_ID = 'hue-id-b'
-  ICON = '/static/oozie/art/icon_oozie_bundle_48.png'
+  ICON = settings.STATIC_URL + 'oozie/art/icon_oozie_bundle_48.png'
   METADATA_FORMAT_VERSION = '0.0.1'
 
   def get_type(self):

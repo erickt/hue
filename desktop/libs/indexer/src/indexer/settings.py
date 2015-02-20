@@ -15,10 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = [ "indexer" ]
 NICE_NAME = "Solr Indexer"
 REQUIRES_HADOOP = False
 MENU_INDEX = 43
-ICON = "${ STATIC_URL }/search/art/icon_search_48.png"
+ICON = settings.STATIC_URL + "search/art/icon_search_48.png"
 
 IS_URL_NAMESPACED = True

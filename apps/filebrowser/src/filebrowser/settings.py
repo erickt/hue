@@ -15,8 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = ['filebrowser']
 NICE_NAME = "File Browser"
 REQUIRES_HADOOP = False
-ICON = "${ STATIC_URL }/filebrowser/art/icon_filebrowser_48.png"
+ICON = settings.STATIC_URL + "filebrowser/art/icon_filebrowser_48.png"
 MENU_INDEX = 20

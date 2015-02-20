@@ -15,8 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+
 DJANGO_APPS = [ "zookeeper" ]
 NICE_NAME = "ZooKeeper Browser"
 MENU_INDEX = 58
-ICON = '/static/zookeeper/art/icon_zookeeper_48.png'
+ICON = settings.STATIC_URL + 'zookeeper/art/icon_zookeeper_48.png'
 IS_URL_NAMESPACED = True
