@@ -199,25 +199,25 @@ ${ commonheader(_("Bundle Editor"), "Oozie", user) | n,unicode }
 </div>
 
 
-<link rel="stylesheet" href="/static/ext/css/hue-filetypes.css">
-<link rel="stylesheet" href="/static/ext/css/hue-charts.css">
-<link rel="stylesheet" href="/static/ext/chosen/chosen.min.css">
-<link rel="stylesheet" href="/oozie/static/css/common-editor.css">
-<link rel="stylesheet" href="/oozie/static/css/coordinator-editor.css">
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/css/hue-filetypes.css">
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/css/hue-charts.css">
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/chosen/chosen.min.css">
+<link rel="stylesheet" href="${ STATIC_URL }/oozie/css/common-editor.css">
+<link rel="stylesheet" href="${ STATIC_URL }/oozie/css/coordinator-editor.css">
 
 ${ dashboard.import_layout() }
 
 ${ commonshare() | n,unicode }
 
-<script src="/static/ext/js/bootstrap-editable.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/js/hue.utils.js"></script>
-<script src="/static/js/ko.editable.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/js/share.vm.js"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/bootstrap-editable.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/js/hue.utils.js"></script>
+<script src="${ STATIC_URL }/desktop/js/ko.editable.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/js/share.vm.js"></script>
 
 ${ dashboard.import_bindings() }
 
-<script src="/oozie/static/js/bundle-editor.ko.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/oozie/js/bundle-editor.ko.js" type="text/javascript" charset="utf-8"></script>
 
 
 <script type="text/javascript">

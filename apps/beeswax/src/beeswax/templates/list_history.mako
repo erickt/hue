@@ -109,7 +109,7 @@ ${ layout.menubar(section='history') }
             <div class="card-body">
               <p>
 
-            <img id="spinner" src="/static/art/spinner.gif" class="hide" />
+            <img id="spinner" src="${ STATIC_URL }/beeswax/art/spinner.gif" class="hide" />
 
             <table class="table table-striped table-condensed datatables" style="padding-left: 0;">
             <thead>

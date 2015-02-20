@@ -33,13 +33,13 @@ def is_selected(section, matcher):
               <li class="currentApp">
                 <a href="/${app_name}">
                 % if app_name == 'impala':
-                  <img src="/impala/static/art/icon_impala_48.png" class="app-icon" />
+                  <img src="${ STATIC_URL }/impala/art/icon_impala_48.png" class="app-icon" />
                   Impala
                 % elif app_name == 'rdbms':
-                  <img src="/rdbms/static/art/icon_rdbms_48.png" class="app-icon" />
+                  <img src="${ STATIC_URL }/rdbms/art/icon_rdbms_48.png" class="app-icon" />
                   DB Query
                 % else:
-                  <img src="/beeswax/static/art/icon_beeswax_48.png" class="app-icon" />
+                  <img src="${ STATIC_URL }/beeswax/art/icon_beeswax_48.png" class="app-icon" />
                   Hive Editor
                 % endif
                 </a>
@@ -63,7 +63,7 @@ def is_selected(section, matcher):
             <ul class="nav">
               <li class="currentApp">
                 <a href="/metastore">
-                  <img src="/metastore/static/art/icon_metastore_48.png" class="app-icon" />
+                  <img src="${ STATIC_URL }/metastore/art/icon_metastore_48.png" class="app-icon" />
                   ${ _('Metastore Manager') }
                 </a>
               </li>

@@ -336,7 +336,7 @@ ${ dashboard.layout_skeleton() }
 <script type="text/html" id="facet-widget">
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 
   <!-- ko if: $root.getFacetFromQuery(id()) -->
@@ -449,7 +449,7 @@ ${ dashboard.layout_skeleton() }
     <div>
       <div class="widget-spinner" data-bind="visible: $root.isRetrievingResults()">
         <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-        <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+        <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
       </div>
 
       <div data-bind="visible: !$root.isRetrievingResults() && $root.results().length == 0">
@@ -487,7 +487,7 @@ ${ dashboard.layout_skeleton() }
                 <td data-bind="attr: {'colspan': $root.collection.template.fieldsSelected().length > 0 ? $root.collection.template.fieldsSelected().length + 1 : 2}">
                   <!-- ko if: $data.details().length == 0 -->
                     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-                    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+                    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
                   <!-- /ko -->
                   <!-- ko if: $data.details().length > 0 -->
                     <div class="document-details">
@@ -621,7 +621,7 @@ ${ dashboard.layout_skeleton() }
 
       <div class="widget-spinner" data-bind="visible: $root.isRetrievingResults()">
         <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-        <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+        <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
       </div>
     </div>
   <!-- /ko -->
@@ -709,7 +709,7 @@ ${ dashboard.layout_skeleton() }
 <script type="text/html" id="histogram-widget">
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 
   <!-- ko if: $root.getFacetFromQuery(id()) -->
@@ -748,7 +748,7 @@ ${ dashboard.layout_skeleton() }
 <script type="text/html" id="bar-widget">
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 
   <!-- ko if: $root.getFacetFromQuery(id()) -->
@@ -789,7 +789,7 @@ ${ dashboard.layout_skeleton() }
 <script type="text/html" id="line-widget">
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 
   <!-- ko if: $root.getFacetFromQuery(id()) -->
@@ -843,7 +843,7 @@ ${ dashboard.layout_skeleton() }
   <!-- /ko -->
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 </script>
 
@@ -912,7 +912,7 @@ ${ dashboard.layout_skeleton() }
 
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 </script>
 
@@ -980,7 +980,7 @@ ${ dashboard.layout_skeleton() }
 
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 </script>
 
@@ -1047,7 +1047,7 @@ ${ dashboard.layout_skeleton() }
   <div class="clearfix"></div>
   <div class="widget-spinner" data-bind="visible: isLoading() &&  $root.query.fqs().length > 0">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 </script>
 
@@ -1076,7 +1076,7 @@ ${ dashboard.layout_skeleton() }
   <!-- /ko -->
   <div class="widget-spinner" data-bind="visible: isLoading()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 </script>
 
@@ -1101,7 +1101,7 @@ ${ dashboard.layout_skeleton() }
 
   <div class="widget-spinner" data-bind="visible: $root.isRetrievingResults()">
     <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-    <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+    <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
   </div>
 </script>
 
@@ -1121,7 +1121,7 @@ ${ dashboard.layout_skeleton() }
       <div class="tab-pane active" id="analysis-terms" data-bind="with: terms">
         <div class="widget-spinner" data-bind="visible: $parent.isLoading()">
           <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-          <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+          <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
         </div>
         <div class="alert" data-bind="visible: ! $parent.isLoading() && $data.data().length == 0">${ _('There are no terms to be shown') }</div>
         <table style="width: 100%" data-bind="visible: ! $parent.isLoading() && $data.data().length > 0" class="table-striped">
@@ -1147,7 +1147,7 @@ ${ dashboard.layout_skeleton() }
       <div class="tab-pane" id="analysis-stats" data-bind="with: stats">
         <div class="widget-spinner" data-bind="visible: $parent.isLoading()">
           <!--[if !IE]> --><i class="fa fa-spinner fa-spin"></i><!-- <![endif]-->
-          <!--[if IE]><img src="/static/art/spinner.gif" /><![endif]-->
+          <!--[if IE]><img src="${ STATIC_URL }/desktop/art/spinner.gif" /><![endif]-->
         </div>
         <div class="alert" data-bind="visible: ! $parent.isLoading() && $data.data().length > 0 && $data.data()[0].key.toLowerCase() == 'error'">${ _('This field does not support stats') }</div>
         <div class="alert" data-bind="visible: ! $parent.isLoading() && $data.data().length == 0">${ _('There are no stats to be shown') }</div>
@@ -1264,24 +1264,24 @@ ${ dashboard.layout_skeleton() }
 <span id="extra" data-bind="augmenthtml: $root.collection.template.extracode"></span>
 
 
-<link rel="stylesheet" href="/search/static/css/search.css">
-<link rel="stylesheet" href="/static/ext/css/hue-filetypes.css">
-<link rel="stylesheet" href="/static/ext/css/hue-charts.css">
-<link rel="stylesheet" href="/static/ext/chosen/chosen.min.css">
+<link rel="stylesheet" href="${ STATIC_URL }/search/css/search.css">
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/css/hue-filetypes.css">
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/css/hue-charts.css">
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/chosen/chosen.min.css">
 
-<script src="/static/ext/js/moment-with-langs.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/moment-with-langs.min.js" type="text/javascript" charset="utf-8"></script>
 
 ${ dashboard.import_layout() }
 
-<script src="/search/static/js/search.utils.js" type="text/javascript" charset="utf-8"></script>
-<script src="/search/static/js/lzstring.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/bootstrap-editable.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/js/ko.editable.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/shortcut.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/mustache.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/search/js/search.utils.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/search/js/lzstring.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/bootstrap-editable.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/js/ko.editable.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/shortcut.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/mustache.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="/search/static/js/search.ko.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/search/js/search.ko.js" type="text/javascript" charset="utf-8"></script>
 
 ${ dashboard.import_bindings() }
 ${ dashboard.import_charts() }

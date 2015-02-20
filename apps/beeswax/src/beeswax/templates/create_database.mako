@@ -179,7 +179,7 @@ ${layout.metastore_menubar()}
 </div>
 
 
-<script src="/static/ext/js/routie-0.3.0.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/routie-0.3.0.min.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function () {

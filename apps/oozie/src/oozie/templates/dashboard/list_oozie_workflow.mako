@@ -344,21 +344,21 @@ ${ layout.menubar(section='workflows', dashboard=True) }
   </div>
 </div>
 
-<script src="/oozie/static/js/dashboard-utils.js" type="text/javascript" charset="utf-8"></script>
-<link rel="stylesheet" href="/oozie/static/css/workflow.css">
-<script src="/static/ext/js/knockout-min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/datatables-paging-0.1.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/codemirror-3.11.js"></script>
-<link rel="stylesheet" href="/static/ext/css/codemirror.css">
-<script src="/static/ext/js/codemirror-xml.js"></script>
+<script src="${ STATIC_URL }/oozie/js/dashboard-utils.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="${ STATIC_URL }/oozie/css/workflow.css">
+<script src="${ STATIC_URL }/desktop/ext/js/knockout-min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/datatables-paging-0.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/codemirror-3.11.js"></script>
+<link rel="stylesheet" href="${ STATIC_URL }/desktop/ext/css/codemirror.css">
+<script src="${ STATIC_URL }/desktop/ext/js/codemirror-xml.js"></script>
 
 % if oozie_workflow.has_sla:
-<script src="/static/ext/js/moment.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/oozie/static/js/sla.utils.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/jquery/plugins/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/jquery/plugins/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/ext/js/jquery/plugins/jquery.flot.time.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/js/jquery.blueprint.js"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/moment.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/oozie/js/sla.utils.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/jquery/plugins/jquery.flot.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/jquery/plugins/jquery.flot.selection.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/ext/js/jquery/plugins/jquery.flot.time.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="${ STATIC_URL }/desktop/js/jquery.blueprint.js"></script>
 %endif
 
 <style type="text/css">

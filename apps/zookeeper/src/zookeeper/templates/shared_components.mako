@@ -65,8 +65,8 @@
     </div>
   </div>
 </div>
-<link rel="stylesheet" href="/zookeeper/static/css/zookeeper.css">
-<script src="/zookeeper/static/js/base64.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="${ STATIC_URL }/zookeeper/css/zookeeper.css">
+<script src="${ STATIC_URL }/zookeeper/js/base64.js" type="text/javascript" charset="utf-8"></script>
 </%def>
 
 <%def name="menubar()">
@@ -77,7 +77,7 @@
             <ul class="nav">
               <li class="currentApp">
                 <a href="/${app_name}">
-                  <img src="/zookeeper/static/art/icon_zookeeper_48.png" class="app-icon"/>
+                  <img src="${ STATIC_URL }/zookeeper/art/icon_zookeeper_48.png" class="app-icon"/>
                   ${ _('ZooKeeper Browser') }
                 </a>
                </li>
