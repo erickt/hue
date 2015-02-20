@@ -87,7 +87,7 @@ ${ commonheader(_('Welcome Home'), "home", user) | n,unicode }
         <ul class="nav">
           <li class="currentApp">
             <a href="${ url('desktop.views.home') }">
-              <img src="/static/desktop/art/home.png" class="app-icon" />
+              <img src="/static/art/home.png" class="app-icon" />
               ${ _('My documents') }
             </a>
            </li>
@@ -122,9 +122,9 @@ ${ commonheader(_('Welcome Home'), "home", user) | n,unicode }
                 <li class="dropdown-submenu">
                   <a href="#"><img src="${ apps['oozie'].icon_path }" class="app-icon"/> ${_('Oozie Scheduler')}</a>
                   <ul class="dropdown-menu">
-                    <li><a href="${ url('oozie:create_workflow') }"><img src="/static/oozie/art/icon_oozie_workflow_48.png" class="app-icon"/> ${_('Workflow')}</a></li>
-                    <li><a href="${ url('oozie:create_coordinator') }"><img src="/static/oozie/art/icon_oozie_coordinator_48.png" class="app-icon"/> ${_('Coordinator')}</a></li>
-                    <li><a href="${ url('oozie:create_bundle') }"><img src="/static/oozie/art/icon_oozie_bundle_48.png" class="app-icon"/> ${_('Bundle')}</a></li>
+                    <li><a href="${ url('oozie:create_workflow') }"><img src="/oozie/static/art/icon_oozie_workflow_48.png" class="app-icon"/> ${_('Workflow')}</a></li>
+                    <li><a href="${ url('oozie:create_coordinator') }"><img src="/oozie/static/art/icon_oozie_coordinator_48.png" class="app-icon"/> ${_('Coordinator')}</a></li>
+                    <li><a href="${ url('oozie:create_bundle') }"><img src="/oozie/static/art/icon_oozie_bundle_48.png" class="app-icon"/> ${_('Bundle')}</a></li>
                   </ul>
                 </li>
                 % endif
@@ -319,11 +319,11 @@ ${ commonheader(_('Welcome Home'), "home", user) | n,unicode }
 </div>
 
 ${ commonshare() | n,unicode }
-<script src="/static/desktop/ext/js/datatables-paging-0.1.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/desktop/ext/js/knockout-min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/desktop/ext/js/knockout.mapping-2.3.2.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/desktop/js/home.vm.js"></script>
-<script src="/static/desktop/js/share.vm.js"></script>
+<script src="/static/ext/js/datatables-paging-0.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ext/js/knockout-min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ext/js/knockout.mapping-2.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/js/home.vm.js"></script>
+<script src="/static/js/share.vm.js"></script>
 
 <script type="text/javascript" charset="utf-8">
   var viewModel, shareViewModel, JSON_USERS_GROUPS;
@@ -468,7 +468,7 @@ ${ commonshare() | n,unicode }
   }
 </style>
 
-<script src="/static/desktop/ext/js/routie-0.3.0.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ext/js/routie-0.3.0.min.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function(){

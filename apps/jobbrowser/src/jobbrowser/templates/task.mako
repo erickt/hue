@@ -22,7 +22,7 @@
 ${ commonheader(_('Job Task: %(taskId)s') % dict(taskId=task.taskId_short), "jobbrowser", user) | n,unicode }
 ${ comps.menubar() }
 
-<link href="/static/jobbrowser/css/jobbrowser.css" rel="stylesheet">
+<link href="/jobbrowser/static/css/jobbrowser.css" rel="stylesheet">
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -165,7 +165,7 @@ ${ comps.menubar() }
   </div>
 </div>
 
-<script src="/static/jobbrowser/js/utils.js" type="text/javascript" charset="utf-8"></script>
+<script src="/jobbrowser/static/js/utils.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function () {

@@ -199,25 +199,25 @@ ${ commonheader(_("Bundle Editor"), "Oozie", user) | n,unicode }
 </div>
 
 
-<link rel="stylesheet" href="/static/desktop/ext/css/hue-filetypes.css">
-<link rel="stylesheet" href="/static/desktop/ext/css/hue-charts.css">
-<link rel="stylesheet" href="/static/desktop/ext/chosen/chosen.min.css">
-<link rel="stylesheet" href="/static/oozie/css/common-editor.css">
-<link rel="stylesheet" href="/static/oozie/css/coordinator-editor.css">
+<link rel="stylesheet" href="/static/ext/css/hue-filetypes.css">
+<link rel="stylesheet" href="/static/ext/css/hue-charts.css">
+<link rel="stylesheet" href="/static/ext/chosen/chosen.min.css">
+<link rel="stylesheet" href="/oozie/static/css/common-editor.css">
+<link rel="stylesheet" href="/oozie/static/css/coordinator-editor.css">
 
 ${ dashboard.import_layout() }
 
 ${ commonshare() | n,unicode }
 
-<script src="/static/desktop/ext/js/bootstrap-editable.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/desktop/js/hue.utils.js"></script>
-<script src="/static/desktop/js/ko.editable.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/desktop/ext/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/desktop/js/share.vm.js"></script>
+<script src="/static/ext/js/bootstrap-editable.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/js/hue.utils.js"></script>
+<script src="/static/js/ko.editable.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/ext/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/js/share.vm.js"></script>
 
 ${ dashboard.import_bindings() }
 
-<script src="/static/oozie/js/bundle-editor.ko.js" type="text/javascript" charset="utf-8"></script>
+<script src="/oozie/static/js/bundle-editor.ko.js" type="text/javascript" charset="utf-8"></script>
 
 
 <script type="text/javascript">

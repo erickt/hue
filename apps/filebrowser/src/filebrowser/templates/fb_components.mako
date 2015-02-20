@@ -71,7 +71,7 @@ from django.utils.translation import ugettext as _
             <ul class="nav">
               <li class="currentApp">
                 <a href="/${app_name}">
-                  <img src="/static/filebrowser/art/icon_filebrowser_48.png" class="app-icon" />
+                  <img src="/filebrowser/static/art/icon_filebrowser_48.png" class="app-icon" />
                   ${ _('File Browser') }
                 </a>
               </li>
