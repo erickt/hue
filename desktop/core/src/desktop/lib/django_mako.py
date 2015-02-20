@@ -17,23 +17,27 @@
 #
 # Adapted from http://code.google.com/p/django-mako/source/browse/trunk/djangomako/shortcuts.py
 
-from django.http import HttpResponse
-from desktop.lib import apputil, i18n
 import os
 import tempfile
-from mako.lookup import TemplateLookup, TemplateCollection
-import django.template
-from django import template
 
-register = template.Library()
+import django.template
+from django.http import HttpResponse
+from django.conf import settings
+
+from mako.lookup import TemplateLookup, TemplateCollection
+
+from desktop.lib import apputil, i18n
+
+register = django.template.Library()
 
 ENCODING_ERRORS = 'replace'
 
 # Things to automatically import into all template namespaces
 IMPORTS=[
-  "from desktop.lib.django_mako import url",
   "from django.utils.html import escape",
-  "from desktop.lib.django_mako import csrf_token"
+  "from desktop.lib.django_mako import url",
+  "from desktop.lib.django_mako import csrf_token",
+  "from desktop.lib.django_mako import STATIC_URL",
 ]
 
 class DesktopLookup(TemplateCollection):
@@ -134,3 +138,6 @@ def csrf_token(request):
   """
   csrf_token = unicode(csrf(request)["csrf_token"])
   return str.format("<input type='hidden' name='csrfmiddlewaretoken' value='{0}' />", csrf_token)
+
+# Expose the STATIC_URL to the templates
+STATIC_URL = settings.STATIC_URL
