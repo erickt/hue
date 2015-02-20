@@ -19,5 +19,5 @@ REQUIRES_HADOOP = True
 
 MIDDLEWARE_CLASSES=[]
 
-ICON = "/jobsub/static/art/icon_jobsub_48.png"
+ICON = "/static/jobsub/art/icon_jobsub_48.png"
 MENU_INDEX = 40

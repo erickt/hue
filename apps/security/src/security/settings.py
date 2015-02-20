@@ -17,7 +17,7 @@
 DJANGO_APPS = [ "security" ]
 NICE_NAME = "Hadoop Security"
 REQUIRES_HADOOP = False
-ICON = "/security/static/art/icon_security_24.png"
+ICON = "/static/security/art/icon_security_24.png"
 MENU_INDEX = 61
 
 IS_URL_NAMESPACED = True
