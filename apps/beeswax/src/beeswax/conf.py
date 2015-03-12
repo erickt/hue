@@ -68,6 +68,12 @@ USE_GET_LOG_API = Config( # To remove in Hue 4
           'If false, use the FetchResults() thrift call from Hive 1.0 or more instead.')
 )
 
+BROWSE_TABLE_LIMIT = Config(
+  key='browse_table_limit',
+  default=0,
+  type=int,
+  help=_t('Set a LIMIT clause when browsing a table. A positive value will be set as the LIMIT. If 0 or negative, do not set any limit.'))
+
 BROWSE_PARTITIONED_TABLE_LIMIT = Config(
   key='browse_partitioned_table_limit',
   default=250,

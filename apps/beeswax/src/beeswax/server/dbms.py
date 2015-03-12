@@ -24,7 +24,7 @@ from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext as _
 
 from beeswax import hive_site
-from beeswax.conf import HIVE_SERVER_HOST, HIVE_SERVER_PORT, BROWSE_PARTITIONED_TABLE_LIMIT
+from beeswax.conf import HIVE_SERVER_HOST, HIVE_SERVER_PORT, BROWSE_TABLE_LIMIT, BROWSE_PARTITIONED_TABLE_LIMIT
 from beeswax.design import hql_query
 from beeswax.hive_site import hiveserver2_use_ssl
 from beeswax.models import QueryHistory, QUERY_TYPES
@@ -186,13 +186,17 @@ class HiveServer2Dbms(object):
   def get_sample(self, database, table):
     """No samples if it's a view (HUE-526)"""
     if not table.is_view:
-      limit = min(100, BROWSE_PARTITIONED_TABLE_LIMIT.get())
+      limit = BROWSE_TABLE_LIMIT.get()
+      if not limit:
+        limit = 100
+
+      limit = min(limit, BROWSE_PARTITIONED_TABLE_LIMIT.get())
       hql = "SELECT * FROM %s.%s LIMIT %s" % (database, table.name, limit)
       query = hql_query(hql)
       handle = self.execute_and_wait(query, timeout_sec=5.0)
 
       if handle:
-        result = self.fetch(handle, rows=100)
+        result = self.fetch(handle, rows=limit)
         self.close(handle)
         return result
 
@@ -508,11 +512,17 @@ class HiveServer2Dbms(object):
 
 
   def _get_browse_limit_clause(self, table):
-    """Get the limit clause when browsing a partitioned table"""
+    """Get the limit clause when browsing a table"""
+
+    limit = BROWSE_TABLE_LIMIT.get()
+    if limit > 0:
+        return "LIMIT %d" % (limit,)
+
     if table.partition_keys:
       limit = BROWSE_PARTITIONED_TABLE_LIMIT.get()
       if limit > 0:
         return "LIMIT %d" % (limit,)
+
     return ""
 
 

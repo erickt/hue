@@ -30,7 +30,7 @@ from desktop.lib.django_test_util import make_logged_in_client, assert_equal_mod
 from desktop.lib.test_utils import add_permission, grant_access
 from useradmin.models import HuePermission, GroupPermission, group_has_permission
 
-from beeswax.conf import BROWSE_PARTITIONED_TABLE_LIMIT
+from beeswax.conf import BROWSE_TABLE_LIMIT, BROWSE_PARTITIONED_TABLE_LIMIT
 from beeswax.views import collapse_whitespace
 from beeswax.test_base import make_query, wait_for_query_to_finish, verify_history, get_query_server_config, fetch_query_result_data
 from beeswax.models import QueryHistory
@@ -125,6 +125,16 @@ class TestMetastoreWithHadoop(BeeswaxSampleProvider):
     response = self.client.get("/metastore/table/default/test/partitions", follow=True)
     assert_true("is not partitioned." in response.content)
 
+  def test_browse_table_with_limit(self):
+    # Limit to 45
+    finish = BROWSE_TABLE_LIMIT.set_for_testing("90")
+    try:
+      response = self.client.get("/metastore/table/default/test")
+      assert_true("0x%x" % 89 in response.content, response.content)
+      assert_false("0x%x" % 90 in response.content, response.content)
+    finally:
+      finish()
+
   def test_browse_partitioned_table_with_limit(self):
     # Limit to 90
     finish = BROWSE_PARTITIONED_TABLE_LIMIT.set_for_testing("90")
@@ -134,6 +144,21 @@ class TestMetastoreWithHadoop(BeeswaxSampleProvider):
       assert_false("0x%x" % 90 in response.content, response.content)
     finally:
       finish()
+
+  def test_browse_limit_overrides_partition_limit(self):
+    # Limit to 45
+    finish = [
+        BROWSE_TABLE_LIMIT.set_for_testing("45"),
+        BROWSE_PARTITIONED_TABLE_LIMIT.set_for_testing("90"),
+    ]
+
+    try:
+      response = self.client.get("/metastore/table/default/test_partitions")
+      assert_true("0x%x" % 44 in response.content, response.content)
+      assert_false("0x%x" % 45 in response.content, response.content)
+    finally:
+      for f in finish:
+        f()
 
   def test_browse_partitions(self):
     response = self.client.get("/metastore/table/default/test_partitions/partitions/0", follow=True)

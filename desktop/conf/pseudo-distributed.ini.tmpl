@@ -808,6 +808,10 @@
   # If false, use the FetchResults() thrift call from Hive 1.0 or more instead.
   ## use_get_log_api=false
 
+  # Set a LIMIT clause when browsing a table.
+  # A positive value will be set as the LIMIT. If 0 or negative, do not set any limit.
+  ## browse_table_limit=250
+
   # Set a LIMIT clause when browsing a partitioned table.
   # A positive value will be set as the LIMIT. If 0 or negative, do not set any limit.
   ## browse_partitioned_table_limit=250
