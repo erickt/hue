@@ -20,7 +20,7 @@ class SparkSessionSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
   }
 
   after {
-    session.close()
+    Await.result(session.close(), Duration.Inf)
   }
 
   describe("A spark session") {
