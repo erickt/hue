@@ -34,7 +34,7 @@ class WebApp(sessionManager: SessionManager)
 
   get("/sessions") {
     Map(
-      "sessions" -> sessionManager.getSessions
+      "sessions" -> sessionManager.getSessionIds
     )
   }
 
