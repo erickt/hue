@@ -34,7 +34,7 @@ class WebApp(sessionManager: SessionManager)
 
   get("/sessions") {
     Map(
-      "sessions" -> sessionManager.getSessionIds
+      "sessions" -> sessionManager.getSessions
     )
   }
 
@@ -47,7 +47,7 @@ class WebApp(sessionManager: SessionManager)
 
   post("/sessions") {
     val createSessionRequest = parsedBody.extract[CreateSessionRequest]
-    val sessionFuture = sessionManager.createSession(createSessionRequest.kind)
+    val sessionFuture = sessionManager.createSession(createSessionRequest.kind, createSessionRequest.proxyUser)
 
     val rep = sessionFuture.map { case session =>
       Created(session,
