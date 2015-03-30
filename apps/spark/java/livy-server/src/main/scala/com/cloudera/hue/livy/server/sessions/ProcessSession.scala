@@ -19,7 +19,7 @@ object ProcessSession extends Logging {
 
   def create(livyConf: LivyConf, id: String, kind: Session.Kind, proxyUser: Option[String] = None): Session = {
     val process = startProcess(livyConf, id, kind, proxyUser)
-    new ProcessSession(id, kind, process)
+    new ProcessSession(id, kind, proxyUser, process)
   }
 
   // Loop until we've started a process with a valid port.
@@ -68,7 +68,10 @@ object ProcessSession extends Logging {
   }
 }
 
-private class ProcessSession(id: String, kind: Session.Kind, process: Process) extends WebSession(id, kind) {
+private class ProcessSession(id: String,
+                             kind: Session.Kind,
+                             proxyUser: Option[String],
+                             process: Process) extends WebSession(id, kind, proxyUser) {
 
   val stdoutThread = new Thread {
     override def run() = {

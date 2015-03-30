@@ -18,11 +18,14 @@ object YarnSession {
       proxyUser = proxyUser,
       callbackUrl = callbackUrl)
 
-    Future.successful(new YarnSession(id, kind, job))
+    Future.successful(new YarnSession(id, kind, proxyUser, job))
   }
 }
 
-private class YarnSession(id: String, kind: Session.Kind, job: Future[Job]) extends WebSession(id, kind) {
+private class YarnSession(id: String,
+                          kind: Session.Kind,
+                          proxyUser: Option[String],
+                          job: Future[Job]) extends WebSession(id, kind, proxyUser) {
   job.onFailure { case _ =>
     _state = Session.Error()
   }

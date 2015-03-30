@@ -179,7 +179,8 @@ private object Serializers {
 
       ("id", session.id) ~
       ("state", serializeSessionState(session.state)) ~
-      ("kind", serializeSessionKind(session.kind))
+      ("kind", serializeSessionKind(session.kind)) ~
+      ("proxyUser", session.proxyUser)
   }
     )
   )
