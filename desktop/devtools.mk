@@ -23,7 +23,6 @@ DEVTOOLS += \
 	nose \
 	coverage \
 	nosetty \
-	werkzeug \
 	windmill
 
 # Install/download dev tools for SDK into the virtual environment
