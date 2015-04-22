@@ -20,7 +20,6 @@
 # May require download from PyPI or whereever
 DEVTOOLS += \
 	ipython \
-	nose \
 	coverage \
 	nosetty \
 	windmill
