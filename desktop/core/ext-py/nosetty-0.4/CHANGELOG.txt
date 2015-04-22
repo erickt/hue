@@ -1,0 +1,44 @@
+0.4
+- fixed a major bug where package level teardown methods were not called after the "r" (rerun all tests) command.
+- uses actual path to python when rerunning tests like "python setup.py nosetests"
+
+0.3.7
+- added a warning in case a subprocess becomes a zombie
+- added warning if a child gets killed by a signal
+
+0.3.6
+- added new format string for --tty-edit-cmd, %(lineindex), the 0-based line number
+- re-implemented error reporting using new InteractiveError exception
+
+0.3.5
+- rewrote session handling
+- fixed bug in how session state sometimes wasn't torn down
+- reorganized tests
+
+0.3.4
+- implemented a much more efficient re-run ("r") command
+- subprocess (python >= 2.4) is now required
+
+0.3.3
+- added command "o" to open stdout when using the --with-outputsave plugin
+- --tty-edit-cmd defaults to "%(editor) +%(lineno) %(filename)" now, a more standard configuration
+- a KeyboardInterrupt will force the stop of a test (before it only set stopOnError=True)
+- prints out an error now if you try to edit a non-existant trace
+
+0.3.2
+- fixed bug where --tty-edit-cmd wasn't getting set right
+- fixed bug where a command like "python setup.py test" wasn't reproduced right during re-run
+
+0.3.1
+- handles stdout capturing
+- interface looks more like standard unittest
+
+0.3
+- changed name to "nosetty"
+- added "r" command to re-run all tests
+
+0.2
+- still as "noselaunch", allows one to type a number and launch an editor at the point in the traceback
+
+0.1
+- first incarnation, as "noselaunch"; launches an editor at the last point in a traceback

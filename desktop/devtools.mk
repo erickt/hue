@@ -21,7 +21,6 @@
 DEVTOOLS += \
 	ipython \
 	coverage \
-	nosetty \
 	windmill
 
 # Install/download dev tools for SDK into the virtual environment
