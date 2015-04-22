@@ -1,0 +1,4 @@
+include README.rst
+include manual_test.py
+include *.txt
+recursive-include tests *.py
