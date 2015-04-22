@@ -19,7 +19,6 @@
 
 # May require download from PyPI or whereever
 DEVTOOLS += \
-	coverage \
 	windmill
 
 # Install/download dev tools for SDK into the virtual environment

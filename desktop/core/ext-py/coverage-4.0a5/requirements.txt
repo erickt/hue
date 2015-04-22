@@ -1,0 +1,5 @@
+# PyPI requirements for running tests for coverage.py
+nose
+mock
+pylint
+tox >= 1.8

@@ -1,0 +1,56 @@
+Coverage.py was originally written by Gareth Rees, and since 2004 has been
+extended and maintained by Ned Batchelder.
+
+Other contributions have been made by:
+
+Adi Roiban
+Alex Gaynor
+Anthony Sottile
+Ben Finney
+Bill Hart
+Brandon Rhodes
+Brett Cannon
+Buck Evan
+Carl Gieringer
+Catherine Proulx
+Chris Adams
+Chris Rose
+Christian Heimes
+Christoph Zwerschke
+Danek Duvall
+Danny Allen
+David Christian
+David Stanek
+Detlev Offenbach
+Devin Jeanpierre
+Eduardo Schettino
+Edward Loper
+Geoff Bache
+George Paci
+George Song
+Greg Rogers
+Guillaume Chazarain
+Imri Goldberg
+JT Olds
+Jessamyn Smith
+Joseph Tate
+Julian Berman
+Krystian Kichewko
+Lex Berezhny
+Marc Abramowitz
+Marcus Cobden
+Mark van der Wal
+Martin Fuzzey
+Matthew Desmarais
+Noel O'Boyle
+Pablo Carballo
+Patrick Mezard
+Peter Portante
+Roger Hu
+Ross Lawley
+Sandra Martocchia
+Sigve Tjora
+Stan Hu
+Steve Leonard
+Titus Brown
+Zooko Wilcox-O'Hearn
