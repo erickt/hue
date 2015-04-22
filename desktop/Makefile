@@ -78,10 +78,6 @@ default:: conf
 # Build apps
 ###################################
 
-# <<<< DEV ONLY
-include $(DESKTOP_ROOT)/devtools.mk
-# END DEV ONLY >>>>
-
 .PHONY: syncdb
 syncdb: $(DESKTOP_DB)
 
@@ -117,7 +113,6 @@ env-install: $(ENV_INSTALL_TARGETS)
 
 .PHONY: clean
 clean: $(CLEAN_TARGETS)
-	@rm -f $(BLD_DIR)/.devtools
 
 .PHONY: distclean
 distclean: clean $(DISTCLEAN_TARGETS)
@@ -130,9 +125,6 @@ ext-clean: $(EXT_CLEAN_TARGETS)
 # hue target
 #
 .PHONY: hue
-# <<<< DEV ONLY
-hue: $(BLD_DIR)/.devtools
-# END DEV ONLY >>>>
 hue: env-install
 	@# Make symlink for backward compatibility
 	@ln -sf hue $(BLD_DIR_BIN)/desktop
