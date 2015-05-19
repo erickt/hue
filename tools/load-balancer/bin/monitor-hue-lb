@@ -113,7 +113,7 @@ class MonitorHue(object):
         for cluster in self.cm_client.get_all_clusters():
             for service in cluster.get_all_services():
                 if service.type == 'HUE':
-                    for role in service.get_all_roles():
+                    for role in service.get_roles_by_type("HUE_SERVER"):
                         host = self.cm_client.get_host(role.hostRef.hostId)
                         hostname = host.hostname
 
@@ -202,6 +202,30 @@ class HAProxyListener(ConfigListener):
 # ------------------------------------------------------------------------------
 
 class NginxListener(ConfigListener):
+    def __init__(self, *args, **kwargs):
+        super(NginxListener, self).__init__(*args, **kwargs)
+
+        self.alias_file = self.config['alias_file']
+        self.generate_alias_file()
+
+
+    def generate_alias_file(self):
+        paths = (
+            '/opt/cloudera/parcels/CDH/lib/hue/build/static/',
+            '/usr/lib/hue/build/static/',
+            os.path.join(os.path.dirname(__file__), '../../../build/static/'),
+        )
+
+        for path in paths:
+            if os.path.exists(path):
+                break
+        else:
+            raise Exception('could not find the Hue static files')
+
+        with open(self.alias_file, 'w') as f:
+            print >> f, 'alias %s;' % path
+
+
     def expand_server_template(self, index, server):
         """Expand the Nginx server line"""
 
@@ -269,6 +293,8 @@ def main(argv):
     if len(options.haproxy) == 0 and len(options.nginx) == 0:
         print >> sys.stderr, 'no processes specified'
         return 1
+
+    listener = NginxListener(None, config['nginx'], options.nginx)
 
     client = ApiResource(hostname, username=username, password=password)
 
