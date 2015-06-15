@@ -50,6 +50,8 @@ import common
 import pth
 import registry
 
+logging.basicConfig()
+
 PROG_NAME = sys.argv[0]
 
 LOG = logging.getLogger()
@@ -185,8 +187,7 @@ def do_sync(reg=None):
     pthfile.sync(apps)
     pthfile.save()
 
-    build.make_syncdb()
-    return True
+    return build.make_syncdb()
   except (OSError, SystemError), ex:
     LOG.error("Failed to update the .pth file. Please fix any problem and run "
               "`%s --sync'\n%s" % (PROG_NAME, ex))
@@ -196,8 +197,7 @@ def do_sync(reg=None):
 def do_collectstatic():
   """Collects the static files. Returns True/False."""
   try:
-    build.make_collectstatic()
-    return True
+    return build.make_collectstatic()
   except (OSError, SystemError), ex:
     LOG.error("Failed to collect the static files. Please fix any problem and run "
               "`%s --collectstatic'\n%s" % (PROG_NAME, ex))

@@ -55,19 +55,26 @@ def make_syncdb():
   """
   make_syncdb() -> True/False
   """
-  statuses = []
   hue_exec = os.path.join(common.INSTALL_ROOT, 'build', 'env', 'bin', 'hue')
-  if os.path.exists(hue_exec):
-    statuses.append( runcmd([ hue_exec, 'syncdb', '--noinput' ]) )
-    statuses.append( runcmd([ hue_exec, 'migrate', '--merge' ]) )
-  return not any(statuses)
+  if not os.path.exists(hue_exec):
+    LOG.error('Failed to find hue executable %s' % hue_exec)
+    return False
+
+  if runcmd([ hue_exec, 'syncdb', '--noinput' ]) != 0:
+    return False
+
+  if not runcmd([ hue_exec, 'migrate', '--merge' ]) != 0:
+    return False
+
+  return True
 
 def make_collectstatic():
   """
   make_collectstatic() -> True/False
   """
-  statuses = []
   hue_exec = os.path.join(common.INSTALL_ROOT, 'build', 'env', 'bin', 'hue')
-  if os.path.exists(hue_exec):
-    statuses.append( runcmd([ hue_exec, 'collectstatic', '--noinput' ]) )
-  return not any(statuses)
+  if not os.path.exists(hue_exec):
+    LOG.error('Failed to find hue executable %s' % hue_exec)
+    return False
+
+  return runcmd([ hue_exec, 'collectstatic', '--noinput' ]) != 0
