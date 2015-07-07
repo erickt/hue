@@ -28,22 +28,6 @@ CPSERVER_HELP = r"""
   Run Hue using the CherryPy WSGI server.
 """
 
-CPSERVER_OPTIONS = {
-  'host': conf.HTTP_HOST.get(),
-  'port': conf.HTTP_PORT.get(),
-  'server_name': 'localhost',
-  'threads': conf.CHERRYPY_SERVER_THREADS.get(),
-  'daemonize': False, # supervisor does this for us
-  'workdir': None,
-  'pidfile': None,
-  'server_user': conf.SERVER_USER.get(),
-  'server_group': conf.SERVER_GROUP.get(),
-  'ssl_certificate': conf.SSL_CERTIFICATE.get(),
-  'ssl_private_key': conf.SSL_PRIVATE_KEY.get(),
-  'ssl_cipher_list': conf.SSL_CIPHER_LIST.get()
-}
-
-
 class Command(BaseCommand):
     help = _("CherryPy Server for Desktop.")
     args = ""
@@ -62,31 +46,18 @@ class Command(BaseCommand):
         except AttributeError:
             pass
         runcpserver(args)
-        
+
     def usage(self, subcommand):
         return CPSERVER_HELP
+
 
 def start_server(options):
     """
     Start CherryPy server
     """
-    from desktop.lib.wsgiserver import CherryPyWSGIServer as Server
-    from django.core.handlers.wsgi import WSGIHandler
-    # Translogger wraps a WSGI app with Apache-style combined logging.
-    server = Server(
-        (options['host'], int(options['port'])),
-        WSGIHandler(),
-        int(options['threads']), 
-        options['server_name']
-    )
-    if options['ssl_certificate'] and options['ssl_private_key']:
-        server.ssl_certificate = options['ssl_certificate']
-        server.ssl_private_key = options['ssl_private_key']
-        server.ssl_cipher_list = options['ssl_cipher_list']
+    from desktop.lib.cherrypy import create_server
 
-        ssl_password = conf.get_ssl_password()
-        if ssl_password:
-            server.ssl_password_cb = lambda *unused: ssl_password
+    server = create_server(**options)
 
     try:
         server.bind_server()
@@ -98,7 +69,7 @@ def start_server(options):
 
 def runcpserver(argset=[], **kwargs):
     # Get the options
-    options = CPSERVER_OPTIONS.copy()
+    options = {}
     options.update(kwargs)
     for x in argset:
         if "=" in x:
@@ -106,7 +77,7 @@ def runcpserver(argset=[], **kwargs):
         else:
             k, v = x, True
         options[k.lower()] = v
-    
+
     if "help" in options:
         print CPSERVER_HELP
         return
