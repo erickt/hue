@@ -100,5 +100,3 @@ class TestIndexerWithSolr:
     content = json.loads(resp.content)
 
     assert_equal(content.get('status'), 0)
-    assert_equal(content.get('fields'), 0)
-    assert_equal(content.get('unique_key'), 0)
