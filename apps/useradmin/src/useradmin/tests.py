@@ -697,37 +697,35 @@ def test_list_for_autocomplete():
   c3_other_group = make_logged_in_client('test_list_for_autocomplete3', is_superuser=False, groupname='test_list_for_autocomplete_other_group')
 
   # c1 is in the same group as c2
-  response = c1.get(reverse('useradmin.views.list_for_autocomplete'), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-  content = json.loads(response.content)
-
-  users = [user['username'] for user in content['users']]
-  groups = [user['name'] for user in content['groups']]
-
-  assert_equal(['test_list_for_autocomplete2', 'test_list_for_autocomplete3'], users)
-  assert_true('test_list_for_autocomplete' in groups, groups)
-  assert_true('test_list_for_autocomplete_other_group' in groups, groups)
+  _test_list_for_autocomplete_with(
+      c1,
+      [u'test_list_for_autocomplete2', u'test_list_for_autocomplete3'],
+      [u'test_list_for_autocomplete', u'test_list_for_autocomplete_other_group'])
 
   # c2 is in the same group as c1
-  response = c2_same_group.get(reverse('useradmin.views.list_for_autocomplete'), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-  content = json.loads(response.content)
-
-  users = [user['username'] for user in content['users']]
-  groups = [user['name'] for user in content['groups']]
-
-  assert_equal(['test_list_for_autocomplete', 'test_list_for_autocomplete3'], users)
-  assert_true('test_list_for_autocomplete' in groups, groups)
-  assert_true('test_list_for_autocomplete_other_group' in groups, groups)
+  _test_list_for_autocomplete_with(
+      c2_same_group,
+      [u'test_list_for_autocomplete', u'test_list_for_autocomplete3'],
+      [u'test_list_for_autocomplete', u'test_list_for_autocomplete_other_group'])
 
   # c3 is alone except for groups
-  response = c3_other_group.get(reverse('useradmin.views.list_for_autocomplete'), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+  _test_list_for_autocomplete_with(
+      c3_other_group,
+      [u'test_list_for_autocomplete', u'test_list_for_autocomplete2'],
+      [u'test_list_for_autocomplete', u'test_list_for_autocomplete_other_group'])
+
+
+def _test_list_for_autocomplete_with(user, expected_users, expected_groups):
+  response = user.get(reverse('useradmin.views.list_for_autocomplete'), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
   content = json.loads(response.content)
 
-  users = [user['username'] for user in content['users']]
-  groups = [user['name'] for user in content['groups']]
+  users = [smart_unicode(user['username']) for user in content['users']]
+  groups = [smart_unicode(user['name']) for user in content['groups']]
 
-  assert_equal(['test_list_for_autocomplete', 'test_list_for_autocomplete2'], users)
-  assert_true('test_list_for_autocomplete' in groups, groups)
-  assert_true('test_list_for_autocomplete_other_group' in groups, groups)
+  assert_equal(expected_users, users, 'user: %s expected_users: %s' % (user, expected_users))
+  for group in expected_groups:
+    assert_true(group in groups, 'groups: %s expected_groups: %s' % (groups, expected_groups))
+
 
 class MockLdapConnection(object):
   def __init__(self, ldap_config, ldap_url, username, password, ldap_cert):
