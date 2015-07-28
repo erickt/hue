@@ -76,7 +76,7 @@ def get_ldap_username(username):
 
 
 def get_ldap_user(username):
-  return User.objects.get(username=get_username(username))
+  return User.objects.get(username=get_ldap_username(username))
 
 
 def get_or_create_ldap_user(username):
