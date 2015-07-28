@@ -71,30 +71,16 @@ def get_ldap_username(username, nt_domain):
     return username
 
 
-def get_ldap_user_kwargs(username):
-  if desktop.conf.LDAP.IGNORE_USERNAME_CASE.get():
-    return {
-      'username__iexact': username
-    }
-  else:
-    return {
-      'username': username
-    }
+def get_ldap_username(username):
+  return desktop.conf.LDAP.FORCE_USERNAME_LOWERCASE.get() and username.lower() or username
 
 
 def get_ldap_user(username):
-  username_kwargs = get_ldap_user_kwargs(username)
-  return User.objects.get(**username_kwargs)
+  return User.objects.get(username=get_username(username))
 
 
 def get_or_create_ldap_user(username):
-  username_kwargs = get_ldap_user_kwargs(username)
-  users = User.objects.filter(**username_kwargs)
-  if users.exists():
-    return User.objects.get(**username_kwargs), False
-  else:
-    username = desktop.conf.LDAP.FORCE_USERNAME_LOWERCASE.get() and username.lower() or username
-    return User.objects.create(username=username), True
+  return User.objects.get_or_create(username=get_ldap_username(username))
 
 
 class LdapConnection(object):
