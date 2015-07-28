@@ -300,6 +300,7 @@ else:
     "OPTIONS": force_dict_to_strings(desktop.conf.DATABASE.OPTIONS.get()),
     # DB used for tests
     "TEST_NAME" : test_name,
+    "TEST_COLLATION" : "utf8_bin",
     # Wrap each request in a transaction.
     "ATOMIC_REQUESTS" : True,
   }
