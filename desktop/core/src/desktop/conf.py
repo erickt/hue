@@ -969,14 +969,28 @@ def validate_mysql_storage():
             FROM information_schema.tables
             WHERE table_schema=DATABASE()''')
 
+        total_not_utf8_collations_count = cursor.execute('''
+            SELECT *
+            FROM information_schema.tables
+            WHERE table_schema=DATABASE() AND table_collation != "utf8_bin"''')
+
         # Promote InnoDB storage engine
         if innodb_table_count != total_table_count:
-          res.append(('PREFERRED_STORAGE_ENGINE', unicode(_('''We recommend MySQL InnoDB engine over
-                                                        MyISAM which does not support transactions.'''))))
+          res.append((
+            'MYSQL_PREFERRED_STORAGE_ENGINE',
+            unicode(_('''We recommend MySQL InnoDB engine over MyISAM which does not support transactions.'''))
+          ))
 
         if innodb_table_count != 0 and innodb_table_count != total_table_count:
-          res.append(('MYSQL_STORAGE_ENGINE', unicode(_('''All tables in the database must be of the same
-                                                        storage engine type (preferably InnoDB).'''))))
+          res.append((
+            'MYSQL_STORAGE_ENGINE',
+            unicode(_('''All tables in the database must be of the same storage engine type (preferably InnoDB).'''))
+          ))
+
+        if total_not_utf8_collations_count != 0:
+          res.append((
+            'PREFERRED_MYSQL_TABLE_COLLATION',
+            unicode(_('''We recommend all tables use the `utf8_bin` collation'''))))
       except Exception, ex:
         LOG.exception("Error in config validation of MYSQL_STORAGE_ENGINE: %s", ex)
 
