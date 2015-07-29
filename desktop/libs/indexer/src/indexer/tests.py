@@ -87,10 +87,17 @@ class TestIndexerWithSolr:
     name = get_db_prefix(name='solr') + 'test_create_collection'
     fields = [{'name': 'my_test', 'type': 'text'}]
 
+    resets = [
+        conf.CONFIG_TEMPLATE_PATH.set_for_testing(os.path.join(os.path.dirname(__file__), 'test_data'))
+    ]
+
     try:
       db.create_collection(name, fields, unique_key_field='id', df='text')
-    finally:
       db.delete_collection(name, core=False)
+    finally:
+      for reset in resets:
+        reset()
+
 
   def test_collections_fields(self):
     db = CollectionManagerController(self.user)
