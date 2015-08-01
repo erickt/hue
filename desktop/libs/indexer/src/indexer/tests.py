@@ -92,15 +92,17 @@ class TestIndexerWithSolr:
 
     dirname = tempfile.mkdtemp()
     try:
-      shutil.copytree(CONFIG_TEMPLATE_PATH.config.default, dirname)
-      shutil.copyfile(test_schema, os.path.join(dirname, os.path.join('solrcloud', 'conf', 'schema.xml')))
-      shutil.copyfile(test_schema, os.path.join(dirname, os.path.join('nosolrcloud', 'conf', 'schema.xml')))
+      solrconfigs = os.path.join(dirname, 'solrconfigs')
+
+      shutil.copytree(CONFIG_TEMPLATE_PATH.config.default, solrconfigs)
+      shutil.copyfile(test_schema, os.path.join(solrconfigs, 'solrcloud', 'conf', 'schema.xml'))
+      shutil.copyfile(test_schema, os.path.join(solrconfigs, 'nonsolrcloud', 'conf', 'schema.xml'))
 
       name = get_db_prefix(name='solr') + 'test_create_collection'
       fields = [{'name': 'my_test', 'type': 'text'}]
 
       resets = [
-          CONFIG_TEMPLATE_PATH.set_for_testing()
+          CONFIG_TEMPLATE_PATH.set_for_testing(solrconfigs)
       ]
 
       try:
