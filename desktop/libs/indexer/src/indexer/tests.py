@@ -17,6 +17,8 @@
 
 import json
 import os
+import shutil
+import tempfile
 
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_true, assert_false
@@ -86,19 +88,29 @@ class TestIndexerWithSolr:
   def test_create_collection(self):
     db = CollectionManagerController(self.user)
 
-    name = get_db_prefix(name='solr') + 'test_create_collection'
-    fields = [{'name': 'my_test', 'type': 'text'}]
+    test_schema = os.path.join(os.path.dirname(__file__), 'test_data', 'schema.xml')
 
-    resets = [
-        CONFIG_TEMPLATE_PATH.set_for_testing(os.path.join(os.path.dirname(__file__), 'test_data'))
-    ]
-
+    dirname = tempfile.mkdtemp()
     try:
-      db.create_collection(name, fields, unique_key_field='id', df='text')
-      db.delete_collection(name, core=False)
+      shutil.copytree(CONFIG_TEMPLATE_PATH.config.default, dirname)
+      shutil.copyfile(test_schema, os.path.join(dirname, os.path.join('solrcloud', 'conf', 'schema.xml')))
+      shutil.copyfile(test_schema, os.path.join(dirname, os.path.join('nosolrcloud', 'conf', 'schema.xml')))
+
+      name = get_db_prefix(name='solr') + 'test_create_collection'
+      fields = [{'name': 'my_test', 'type': 'text'}]
+
+      resets = [
+          CONFIG_TEMPLATE_PATH.set_for_testing()
+      ]
+
+      try:
+        db.create_collection(name, fields, unique_key_field='id', df='text')
+        db.delete_collection(name, core=False)
+      finally:
+        for reset in resets:
+          reset()
     finally:
-      for reset in resets:
-        reset()
+      shutil.rmtree(dirname)
 
 
   def test_collections_fields(self):
