@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import json
+import os
 
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_true, assert_false
@@ -28,6 +29,7 @@ from desktop.lib.test_utils import add_to_group, grant_access
 from hadoop.pseudo_hdfs4 import is_live_cluster, get_db_prefix
 from libzookeeper.conf import ENSEMBLE
 
+from indexer.conf import CONFIG_TEMPLATE_PATH
 from indexer.controller import get_solr_ensemble, CollectionManagerController
 
 
@@ -87,10 +89,17 @@ class TestIndexerWithSolr:
     name = get_db_prefix(name='solr') + 'test_create_collection'
     fields = [{'name': 'my_test', 'type': 'text'}]
 
+    resets = [
+        CONFIG_TEMPLATE_PATH.set_for_testing(os.path.join(os.path.dirname(__file__), 'test_data'))
+    ]
+
     try:
       db.create_collection(name, fields, unique_key_field='id', df='text')
-    finally:
       db.delete_collection(name, core=False)
+    finally:
+      for reset in resets:
+        reset()
+
 
   def test_collections_fields(self):
     db = CollectionManagerController(self.user)
