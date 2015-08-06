@@ -33,7 +33,7 @@ import hadoop
 from nose.tools import assert_true, assert_equal, assert_false, assert_not_equal, assert_raises
 from nose.plugins.skip import SkipTest
 
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_str, smart_unicode
 from django.utils.html import escape
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -1735,19 +1735,19 @@ for x in sys.stdin:
     # Autocomplete nested fields for a given column
     resp = self.client.get(reverse("beeswax:api_autocomplete_column", kwargs={'database': self.db_name, 'table': 'nested_table', 'column': 'foo'}))
     json_resp = json.loads(resp.content)
-    assert_equal("array", json_resp['type'])
-    assert_equal("array<struct<bar:int,baz:string>>", json_resp['extended_type'])
+    assert_equal(u"array", smart_unicode(json_resp['type']))
+    assert_equal(u"array<struct<bar:int,baz:string>>", smart_unicode(json_resp['extended_type']))
     assert_true("elem" in json_resp)
-    assert_equal("struct", json_resp["elem"]["type"])
-    assert_equal("struct<bar:int,baz:string>", json_resp["elem"]["extended_type"])
+    assert_equal(u"struct", smart_unicode(json_resp["elem"]["type"]))
+    assert_equal(u"struct<bar:int,baz:string>", smart_unicode(json_resp["elem"]["extended_type"]))
 
     # Autcomplete nested fields for a given nested type
     resp = self.client.get(reverse("beeswax:api_autocomplete_nested", kwargs={'database': self.db_name, 'table': 'nested_table', 'column': 'foo', 'nested': '$elem$'}))
     json_resp = json.loads(resp.content)
-    assert_equal("struct", json_resp['type'])
-    assert_equal("struct<bar:int,baz:string>", json_resp['extended_type'])
+    assert_equal(u"struct", smart_unicode(json_resp['type']))
+    assert_equal(u"struct<bar:int,baz:string>", smart_unicode(json_resp['extended_type']))
     assert_true("fields" in json_resp)
-    assert_true("extended_fields" in json_resp)
+    assert_true(u"extended_fields" in json_resp)
 
   def test_databases_quote(self):
     c = self.client
