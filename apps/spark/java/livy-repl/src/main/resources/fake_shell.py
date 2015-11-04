@@ -22,9 +22,14 @@ import json
 import logging
 import sys
 import traceback
+import os
 
 logging.basicConfig()
 LOG = logging.getLogger('fake_shell')
+
+print os.getcwd()
+print sys.argv
+print sys.path
 
 global_dict = {}
 

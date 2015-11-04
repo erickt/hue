@@ -61,24 +61,25 @@ object PythonInterpreter extends Logging {
 
   private def findPySparkArchives(): Seq[String] = {
     sys.env.get("PYSPARK_ARCHIVES_PATH")
+      .orElse(sys.props.get("spark.livy.pysparkArchives"))
       .map(_.split(",").toSeq)
       .getOrElse {
-      sys.env.get("SPARK_HOME") .map { case sparkHome =>
-        val pyLibPath = Seq(sparkHome, "python", "lib").mkString(File.separator)
-        val pyArchivesFile = new File(pyLibPath, "pyspark.zip")
-        require(pyArchivesFile.exists(),
-          "pyspark.zip not found in Spark environment; cannot run pyspark application in YARN mode.")
+        sys.env.get("SPARK_HOME") .map { case sparkHome =>
+          val pyLibPath = Seq(sparkHome, "python", "lib").mkString(File.separator)
+          val pyArchivesFile = new File(pyLibPath, "pyspark.zip")
+          require(pyArchivesFile.exists(),
+            "pyspark.zip not found in Spark environment; cannot run pyspark application in YARN mode.")
 
-        val py4jFile = Files.newDirectoryStream(Paths.get(pyLibPath), "py4j-*-src.zip")
-          .iterator()
-          .next()
-          .toFile
+          val py4jFile = Files.newDirectoryStream(Paths.get(pyLibPath), "py4j-*-src.zip")
+            .iterator()
+            .next()
+            .toFile
 
-        require(py4jFile.exists(),
-          "py4j-*-src.zip not found in Spark environment; cannot run pyspark application in YARN mode.")
-        Seq(pyArchivesFile.getAbsolutePath, py4jFile.getAbsolutePath)
-      }.getOrElse(Seq())
-    }
+          require(py4jFile.exists(),
+            "py4j-*-src.zip not found in Spark environment; cannot run pyspark application in YARN mode.")
+          Seq(pyArchivesFile.getAbsolutePath, py4jFile.getAbsolutePath)
+        }.getOrElse(Seq())
+      }
   }
 
   private def createFakeShell(): File = {

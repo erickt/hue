@@ -55,6 +55,10 @@ abstract class BatchSessionFactory(factory: SparkProcessBuilderFactory) extends 
     request.queue.foreach(builder.queue)
     request.name.foreach(builder.name)
 
+    if (request.file.endsWith(".py")) {
+      builder.isPython()
+    }
+
     builder.redirectOutput(Redirect.PIPE)
     builder.redirectErrorStream(true)
 

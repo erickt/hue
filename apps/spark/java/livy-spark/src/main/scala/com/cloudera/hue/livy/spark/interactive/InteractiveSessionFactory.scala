@@ -79,7 +79,7 @@ abstract class InteractiveSessionFactory(processFactory: SparkProcessBuilderFact
         admin = true)
 
     request.kind match {
-      case PySpark() => builder.conf("spark.yarn.isPython", "true", admin = true)
+      case PySpark() => builder.isPython()
       case _ =>
     }
 

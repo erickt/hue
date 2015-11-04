@@ -18,6 +18,9 @@
 
 package com.cloudera.hue.livy.spark
 
+import java.io.File
+import java.nio.file.{Files, Paths}
+
 import com.cloudera.hue.livy.{LivyConf, Logging}
 
 import scala.collection.JavaConversions._
@@ -219,6 +222,18 @@ class SparkProcessBuilder(livyConf: LivyConf, userConfigurableOptions: Set[Strin
     this
   }
 
+  def isPython(): SparkProcessBuilder = {
+    conf("spark.yarn.isPython", "true", admin = true)
+    val archives = findPySparkArchives()
+    if (archives.nonEmpty) {
+      archives.foreach { p: File => AbsolutePath(p.getAbsolutePath) }
+      val relative = archives.map(_.getName).mkString(",")
+      conf("spark.livy.pysparkArchives", relative, admin = true)
+    }
+
+    this
+  }
+
   def start(file: Path, args: Traversable[String]): SparkProcess = {
     var arguments = ArrayBuffer(fromPath(_executable))
 
@@ -286,6 +301,28 @@ class SparkProcessBuilder(livyConf: LivyConf, userConfigurableOptions: Set[Strin
         p
       } else {
         fsRoot + "/" + p
+      }
+  }
+
+  private def findPySparkArchives(): Seq[File] = {
+    sys.env.get("PYSPARK_ARCHIVES_PATH")
+      .map(_.split(",").map(Paths.get(_).toFile).toSeq)
+      .getOrElse {
+        sys.env.get("SPARK_HOME") .map { case sparkHome =>
+          val pyLibPath = Seq(sparkHome, "python", "lib").mkString(File.separator)
+          val pyArchivesFile = new File(pyLibPath, "pyspark.zip")
+          require(pyArchivesFile.exists(),
+            "pyspark.zip not found in Spark environment; cannot run pyspark application in YARN mode.")
+
+          val py4jFile = Files.newDirectoryStream(Paths.get(pyLibPath), "py4j-*-src.zip")
+            .iterator()
+            .next()
+            .toFile
+
+          require(py4jFile.exists(),
+            "py4j-*-src.zip not found in Spark environment; cannot run pyspark application in YARN mode.")
+          Seq(pyArchivesFile, py4jFile)
+        }.getOrElse(Seq())
       }
   }
 }
