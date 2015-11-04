@@ -15,7 +15,7 @@ The code is currently incubating in Hue but hopefully will eventually graduate i
 
 
 Quick Start
-=============
+===========
 
 Livy is used for powering the Spark snippets of the `Hadoop Notebook`_ of `Hue 3.8`_, which you can see the
 `implementation here`_.
@@ -398,13 +398,13 @@ The `Session`_.
 
 
 DELETE /sessions/{sessionId}
--------------------------
+----------------------------
 
 Kill the `Session`_ job.
 
 
 GET /sessions/{sessionId}/logs
----------------------------
+------------------------------
 
 Get the log lines from this session.
 
